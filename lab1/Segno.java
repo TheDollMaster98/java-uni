@@ -1,8 +1,33 @@
 package lab1;
 
+/**
+ * # Intero con segno
+ * 
+ * Scrivere un programma che legga da **riga di comando** un numero intero `n`
+ * (specificato senza segno se maggiore o uguale a 0) e stampi a video il numero
+ * con il segno.
+ * 
+ * ##### Esempio d'esecuzione:
+ * 
+ * ```text
+ * $ java Segno 5
+ * +5
+ * 
+ * $ java Segno 0
+ * 0
+ * 
+ * $ java Segno -5
+ * -5
+ * ```
+ * 
+ */
 public class Segno {
 
     public static void main(String[] args) {
-    
+
+        int n = Integer.parseInt(args[0]);
+
+        System.out.println(n > 0 ? "+" + n : String.valueOf(n));
+
     }
 }
