@@ -25,18 +25,29 @@ Java è un linguaggio di programmazione orientato agli oggetti, creato da Sun Mi
 
 ## Installazione e Setup
 
-1. **Installazione del JDK (Java Development Kit)**
+1. **Installazione del JDK 21 (Java Development Kit)**
 
-   - Scaricare il JDK da [Oracle](https://www.oracle.com/java/technologies/downloads/)
-   - Installare il JDK
-   - Configurare le variabili d'ambiente JAVA_HOME e Path
+   - Scaricare il JDK 21 da [Oracle](https://www.oracle.com/java/technologies/downloads/#java21)
+   - Installare il JDK 21
+   - Configurare le variabili d'ambiente:
+     1. `JAVA_HOME`: Puntare alla directory di installazione di JDK 21 (es: `C:\Program Files\Java\jdk-21`)
+     2. `Path`: Aggiungere `%JAVA_HOME%\bin`
 
 2. **Verifica dell'installazione**
 
 ```bash
-java -version
-javac -version
+java -version   # Dovrebbe mostrare "java version "21" o "21.x.x"
+javac -version  # Dovrebbe mostrare "javac 21" o "21.x.x"
 ```
+
+> **Nota**: Java 21 è una versione LTS (Long Term Support) che include molte nuove funzionalità come:
+>
+> - Pattern Matching per switch
+> - Record Patterns
+> - Virtual Threads
+> - Sequenced Collections
+> - String Templates (Preview)
+> - Foreign Function & Memory API
 
 ## Concetti Base
 
