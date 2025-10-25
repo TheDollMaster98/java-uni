@@ -1,4 +1,3 @@
-package lab1;
 
 /**
  * # Intero con segno
