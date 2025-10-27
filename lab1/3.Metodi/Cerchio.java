@@ -21,4 +21,26 @@
 
 public class Cerchio {
 
+    public static void main(String[] args) {
+
+        if (args.length != 1) {
+            System.out.println("Errore, inserire un numero");
+            return;
+        }
+
+        double raggio = Double.parseDouble(args[0]);
+
+        System.out.println("Area del cerchio: " + CalcolaArea(raggio));
+        System.out.println("Circonferenza del cerchio: " + CalcolaCirconferenza(raggio));
+    }
+
+    public static double CalcolaArea(double raggio) {
+
+        return raggio * Math.pow(Math.PI, 2);
+    }
+
+    public static double CalcolaCirconferenza(double raggio) {
+        return 2 * Math.PI * raggio;
+    }
+
 }
