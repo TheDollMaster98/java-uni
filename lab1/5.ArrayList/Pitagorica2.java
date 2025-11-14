@@ -96,8 +96,8 @@ public class Pitagorica2 {
 
         ArrayList<ArrayList<Integer>> tavola = creaTavolaPitagorica(n);
         // stampa formattata
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) { // riga
+            for (int j = 0; j < n; j++) { // elemento
                 // System.out.printf("%4d", tavola[i][j]);
                 System.out.printf("%4d", tavola.get(i).get(j));
             }

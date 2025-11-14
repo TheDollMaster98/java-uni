@@ -92,8 +92,8 @@ public class Pitagorica {
 
         int[][] tavola = creaTavolaPitagorica(n);
         // stampa formattata
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) { // riga
+            for (int j = 0; j < n; j++) { // item
                 System.out.printf("%4d", tavola[i][j]);
             }
             System.out.println();
