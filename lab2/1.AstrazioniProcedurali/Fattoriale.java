@@ -57,7 +57,7 @@ public class Fattoriale {
 
         int fattoriale = 1;
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             fattoriale *= i;
         }
 
@@ -77,8 +77,8 @@ public class Fattoriale {
 
         List<Integer> lista = new ArrayList<Integer>();
 
-        for (int i = 0; i < n; i++) {
-            lista.add(fattoriale(n));
+        for (int i = 0; i <= n; i++) {
+            lista.add(fattoriale(i));
         }
 
         return lista;
