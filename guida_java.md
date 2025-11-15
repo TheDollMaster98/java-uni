@@ -219,8 +219,6 @@ Caratteristiche:
 
 ### MAP / HASHMAP – chiave → valore
 
-Questa è la parte che ti mancava.
-
 ```java
 import java.util.Map;
 import java.util.HashMap;
