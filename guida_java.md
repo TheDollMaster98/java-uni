@@ -1,6 +1,7 @@
-# Guida Completa Java
+# Guida Completa Java – Da Zero a Hero (Versione Estesa per Prog2)
 
-Guida strutturata in stile **Markdown per GitHub**, mantenendo il contenuto originale e arricchendo con spiegazioni aggiuntive + differenze tra Array, ArrayList, List, Map, Set.
+Guida strutturata in stile **Markdown per GitHub**, progettata per chi vuole padroneggiare Java per Programmazione 2 e per il lavoro reale.  
+Include: concetti base, OOP, collezioni, Map/Set, eccezioni, AF/RI, specifiche, gerarchie.
 
 ---
 
@@ -12,46 +13,54 @@ Guida strutturata in stile **Markdown per GitHub**, mantenendo il contenuto orig
 4. [Strutture di Controllo](#strutture-di-controllo)
 5. [Classi e Oggetti](#classi-e-oggetti)
 6. [Array e Collezioni](#array-e-collezioni)
+   - Array
+   - List / ArrayList
+   - Set / HashSet
+   - Map / HashMap
+   - Iterazioni corrette
 7. [Ereditarietà e Polimorfismo](#ereditarietà-e-polimorfismo)
 8. [Interfacce e Classi Astratte](#interfacce-e-classi-astratte)
 9. [Gestione delle Eccezioni](#gestione-delle-eccezioni)
 10. [Input/Output](#inputoutput)
 11. [Best Practices](#best-practices)
-12. [Risorse Utili](#risorse-utili)
+12. [Sezione Speciale – Java per Prog2 (Zero to Hero)](#sezione-speciale--java-per-prog2-zero-to-hero)
+13. [Risorse Utili](#risorse-utili)
 
 ---
 
 ## Introduzione a Java
 
-Java è un linguaggio orientato agli oggetti creato da Sun Microsystems (ora Oracle). Le sue caratteristiche principali sono:
+Java è un linguaggio OOP (Object-Oriented Programming) con:
 
-- **WORA**: Write Once, Run Anywhere
-- **Garbage Collection** automatica
+- **WORA** (Write Once, Run Anywhere)
+- **Garbage Collection**
 - **Tipizzazione statica e forte**
-- **OOP completo** (incapsulamento, ereditarietà, polimorfismo)
-- Grande ecosistema e libreria standard
+- Ecosistema vastissimo
+- Compatibilità retroattiva molto alta
+
+Java è uno dei linguaggi più usati nel mondo enterprise.
 
 ---
 
 ## Installazione e Setup
 
-### 1. Installazione JDK 21
+### 1. Installare JDK 21
 
-Scarica da [Oracle](https://www.oracle.com/java/technologies/downloads/#java21) o Adoptium.
+Puoi usare Oracle o Adoptium (consigliato).
 
-Configura le variabili d'ambiente:
+Configura:
 
 - `JAVA_HOME`
-- `PATH` → aggiungi `%JAVA_HOME%/bin`
+- aggiungi `%JAVA_HOME%/bin` al `PATH`
 
-### 2. Verifica
+### 2. Verifica installazione
 
 ```bash
 java -version
 javac -version
 ```
 
-### Novità Java 21
+### Novità Java 21 (overview veloce)
 
 - Pattern Matching per `switch`
 - Record Patterns
@@ -63,7 +72,7 @@ javac -version
 
 ## Concetti Base
 
-### Struttura base di un programma
+### Struttura base
 
 ```java
 public class HelloWorld {
@@ -75,10 +84,10 @@ public class HelloWorld {
 
 ### Tipi primitivi
 
-- byte, short, int, long
-- float, double
-- boolean
-- char
+- `int`, `long`
+- `float`, `double`
+- `boolean`
+- `char`
 
 ### Variabili
 
@@ -91,26 +100,41 @@ final double PI = 3.14;
 
 ## Strutture di Controllo
 
-### If, Else, Switch
+### If / Else
 
 ```java
-if (x > 0) {...}
-else {...}
+if (x > 0) {
+    ...
+} else {
+    ...
+}
+```
+
+### Switch moderno
+
+```java
+switch (giorno) {
+    case 1 -> System.out.println("Lunedì");
+    case 2 -> System.out.println("Martedì");
+    default -> System.out.println("Altro");
+}
 ```
 
 ### Cicli
 
 ```java
-for (int i = 0; i < 10; i++) {...}
-while(cond) {...}
-for (Tipo x : collezione) {...}
+for (int i = 0; i < 10; i++) {}
+
+while (cond) {}
+
+for (String s : lista) {} // foreach
 ```
 
 ---
 
 ## Classi e Oggetti
 
-### Classe
+### Definire una classe
 
 ```java
 public class Persona {
@@ -126,7 +150,7 @@ public class Persona {
 }
 ```
 
-### Oggetto
+### Creare oggetti
 
 ```java
 Persona p = new Persona("Mario", 30);
@@ -136,129 +160,204 @@ Persona p = new Persona("Mario", 30);
 
 ## Array e Collezioni
 
-### ARRAY
+Java ha un sistema di collezioni molto più rigido e tipizzato rispetto a JS, Python, Go, Dart.
 
-- dimensione fissa
-- veloce
-- contiene primitivi o oggetti
+### ARRAY – dimensione fissa
 
 ```java
-int[] nums = new int[3];
-nums[0] = 10;
+int[] numeri = new int[3];
+numeri[0] = 10;
+
+int[] altri = { 1, 2, 3 };
 ```
 
-### ARRAYLIST
+---
 
-- dinamico
-- solo oggetti (autoboxing per primitivi)
+### LIST / ARRAYLIST – sequenza dinamica ordinata
 
-```java
-ArrayList<Integer> lista = new ArrayList<>();
-lista.add(10);
-```
-
-### LIST (INTERFACCIA)
-
-- contratto generale
-- implementato da ArrayList, LinkedList…
+`List` è un’interfaccia.  
+`ArrayList` è l’implementazione più usata.
 
 ```java
+import java.util.List;
+import java.util.ArrayList;
+
 List<String> nomi = new ArrayList<>();
+nomi.add("Mario");
+nomi.add("Luigi");
+
+String primo = nomi.get(0);
+nomi.remove(1);
 ```
 
-### HASHMAP (chiave → valore)
+Caratteristiche:
+
+- accetta duplicati
+- mantiene ordine
+- utile per collezioni sequenziali
+
+---
+
+### SET / HASHSET – insieme senza duplicati
 
 ```java
-HashMap<String, Integer> m = new HashMap<>();
-m.put("anni", 20);
-```
+import java.util.Set;
+import java.util.HashSet;
 
-### HASHSET (insieme senza duplicati)
-
-```java
-HashSet<String> s = new HashSet<>();
+Set<String> s = new HashSet<>();
 s.add("ciao");
+s.add("ciao"); // ignorato
 ```
+
+Caratteristiche:
+
+- niente duplicati
+- ordine non garantito
+- lookup molto veloce (`contains`)
+
+---
+
+### MAP / HASHMAP – chiave → valore
+
+Questa è la parte che ti mancava.
+
+```java
+import java.util.Map;
+import java.util.HashMap;
+
+Map<String, Integer> utenti = new HashMap<>();
+
+utenti.put("loris", 28);
+utenti.put("marco", 31);
+
+int eta = utenti.get("loris");     // 28
+boolean esiste = utenti.containsKey("marco");
+```
+
+- Chiavi **uniche**
+- Valori qualsiasi
+- Lookup O(1) medio
+
+#### Attenzione: `get()` può restituire `null` se la chiave non esiste.
+
+#### Iterare una Map (modo corretto)
+
+```java
+for (Map.Entry<String, Integer> entry : utenti.entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
+}
+```
+
+#### Aggiornare valori
+
+Uso comune in esercizi Prog2: contare occorrenze.
+
+```java
+m.put(k, m.getOrDefault(k, 0) + 1);
+```
+
+---
 
 ### Differenze rapide
 
-| Struttura | Dimensione | Duplicati      | Ordinamento | Quando usarla                |
-| --------- | ---------- | -------------- | ----------- | ---------------------------- |
-| Array     | fissa      | sì             | sì          | alta performance             |
-| ArrayList | dinamica   | sì             | sì          | liste mutate spesso          |
-| List      | dipende    | sì             | sì          | programmazione ad interfacce |
-| HashSet   | dinamica   | no             | no          | evitare duplicati            |
-| HashMap   | dinamica   | chiave univoca | no          | lookup veloce                |
+| Struttura | Dimensione | Duplicati    | Ordinamento | Uso                        |
+| --------- | ---------- | ------------ | ----------- | -------------------------- |
+| Array     | fissa      | sì           | sì          | performance, basso livello |
+| ArrayList | dinamica   | sì           | sì          | liste mutate spesso        |
+| List      | dipende    | sì           | sì          | programmare ad interfacce  |
+| HashSet   | dinamica   | no           | no          | garantire unicità          |
+| HashMap   | dinamica   | chiave unica | no          | lookup veloce              |
 
 ---
 
 ## Ereditarietà e Polimorfismo
 
-### Ereditarietà
+### Ereditarietà base
 
 ```java
-class Animale { void verso(){} }
-class Cane extends Animale { @Override void verso(){ System.out.println("bau"); } }
+class Animale { void verso() {} }
+
+class Cane extends Animale {
+    @Override void verso() { System.out.println("bau"); }
+}
 ```
 
 ### Polimorfismo
 
 ```java
 Animale a = new Cane();
-a.verso();
+a.verso(); // bau
 ```
 
 ---
 
 ## Interfacce e Classi Astratte
 
-### Interfacce
+### Interfaccia
 
 ```java
-interface Volante { void vola(); }
+interface Volante {
+    void vola();
+}
 ```
 
-### Classi astratte
+### Classe astratta
 
 ```java
-abstract class Forma { abstract double area(); }
+abstract class Forma {
+    abstract double area();
+}
 ```
 
 ---
 
 ## Gestione delle Eccezioni
 
+### Try / Catch
+
 ```java
 try {
-    int x = 10 / 0;
+    int x = 1 / 0;
 } catch (ArithmeticException e) {
-    System.out.println("errore");
+    System.out.println("Errore");
 } finally {
-    System.out.println("done");
+    System.out.println("Sempre eseguito");
 }
 ```
 
-- **Checked** → vanno gestite
-- **Unchecked (RuntimeException)** → errori di logica
+### Checked vs Unchecked
+
+- checked → devi gestirle (`IOException`, `Exception`)
+- unchecked → errori di logica (`NullPointerException`, `IllegalArgumentException`)
 
 ---
 
 ## Input/Output
 
-### Input da console
+### Scanner (console)
 
 ```java
+import java.util.Scanner;
+
 Scanner sc = new Scanner(System.in);
 int x = sc.nextInt();
+sc.close();
 ```
 
-### File
+### Lettura file
 
 ```java
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 try (BufferedReader r = new BufferedReader(new FileReader("file.txt"))) {
     String line;
-    while ((line = r.readLine()) != null)
+    while ((line = r.readLine()) != null) {
         System.out.println(line);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
 }
 ```
 
@@ -266,277 +365,134 @@ try (BufferedReader r = new BufferedReader(new FileReader("file.txt"))) {
 
 ## Best Practices
 
-- camelCase per variabili e metodi
+- camelCase per variabili/metodi
 - PascalCase per classi
-- APRI-CHIUDI risorse sempre
-- Programma ad interfacce (List invece di ArrayList)
-- Evita duplicazioni
+- chiudi sempre le risorse
+- programma ad interfacce (`List`, `Map`, `Set`)
+- usa eccezioni per errori logici
+- mantieni tutto `private` nella rappresentazione
 
 ---
 
 ## Sezione Speciale – Java per Prog2 (Zero to Hero)
 
-Guida pensata per chi arriva da JavaScript / TypeScript / Dart / Go e deve capire rapidamente **cosa serve davvero** per Programmazione 2.
+Questa è la parte più rilevante se devi passare l’esame.
 
-### Cosa studierai realmente in Prog2
+Prog2 non valuta Java:  
+valuta **progettazione di tipi di dato**, correttezza, specifiche, AF/RI.
 
-Prog2 NON è un corso di "Java applicato". È un corso di **progettazione di tipi di dato (ADT)**.
+---
 
-L’uso di Java è funzionale a studiare:
+### Cosa studierai davvero
 
-- **Specifiche formali** di metodi e tipi (`REQUIRES`, `MODIFIES`, `EFFECTS`)
-- **Astrazione** e definizione di tipi di dato astratti (ADT)
+- **Specifiche formali** (`REQUIRES`, `MODIFIES`, `EFFECTS`)
 - **Funzione di Astrazione (AF)**
 - **Invariante di Rappresentazione (RI)**
-- Progettazione di classi corrette, sicure e non corrotte
-- Mutabilità vs Immutabilità
-- Implementazioni corrette di oggetti
-- Gerarchie e sottotipi corretti
-
-In altre parole:
-
-> Prog2 valuta se sai PROGETTARE, non programmare.
-
-Java è solo il mezzo.
+- Perché una classe è **corretta**
+- Mutabilità e immutabilità
+- Gerarchie e principio di sostituzione di Liskov
+- Composizione vs ereditarietà
 
 ---
 
-### Differenze per chi arriva da JS / TS / Dart / Go
+### ADT – Abstract Data Type
 
-Ecco un confronto rapido:
+Un ADT è definito dal **comportamento**, non dall’implementazione.
 
-| Concetto   | JS/TS                              | Dart            | Go                  | Java                        | Note per Prog2                           |
-| ---------- | ---------------------------------- | --------------- | ------------------- | --------------------------- | ---------------------------------------- |
-| Tipi       | dinamici (TS statico ma non reale) | statici         | statici             | statici e rigidi            | Java è molto più formale                 |
-| OOP        | prototipale                        | classico        | no OOP classica     | OOP pura                    | serve per gerarchie e specifiche         |
-| Metodi     | funzioni libere                    | membri classici | funzioni + receiver | metodi su classi            | in Prog2 devi progettare metodi corretti |
-| Eccezioni  | rare                               | presenti        | error-return        | eccezioni molto strutturate | usate molto in specifiche                |
-| Mutabilità | ovunque                            | controllata     | strutture mutate    | molto controllata           | centrale in AF/RI                        |
+Esempio: Stack
 
----
+- `push`
+- `pop`
+- `top`
+- `isEmpty`
 
-### 1. Cos’è un Tipo di Dato Astratto (ADT)
-
-Un ADT è un tipo definito:
-
-- dal **comportamento**
-- non dall’implementazione
-
-Esempio: `Stack`
-
-- Operazioni: `push`, `pop`, `top`, `isEmpty`
-- Non importa **come** è memorizzato dentro (array? linked list?)
-- Importa **che comportamento ha**
-
-Prog2 ti fa progettare tanti ADT.
+Implementazione interna irrilevante.
 
 ---
 
-### 2. Specifiche dei Metodi (il cuore dell'esame)
+### Specifiche dei metodi
 
-Ogni metodo in Prog2 deve avere una specifica formale composta da:
+Struttura:
 
-#### `REQUIRES:`
-
-Condizioni che devono essere vere PRIMA della chiamata.
-
-#### `MODIFIES:`
-
-Quali campi interni del tipo vengono modificati.
-
-#### `EFFECTS:`
-
-Effetti del metodo:
-
-- cosa ritorna
-- quali eccezioni lancia
-- come cambia lo stato dell’oggetto
+```
+REQUIRES: condizioni da rispettare all’ingresso
+MODIFIES: campi modificati
+EFFECTS: cosa fa, cosa restituisce, quali eccezioni può lanciare
+```
 
 Esempio:
 
 ```
 REQUIRES: n > 0
 MODIFIES: this
-EFFECTS: aggiunge n a this; se n <= 0 lancia IllegalArgumentException
+EFFECTS: aggiunge n; se n <= 0 lancia IllegalArgumentException
 ```
 
 ---
 
-### 3. Funzione di Astrazione (AF)
+### AF – Funzione di Astrazione
 
-Descrive **come** la rappresentazione interna diventa il valore astratto visto dall’esterno.
+Descrive come lo stato interno (array, lista…) rappresenta il valore astratto.
 
 Esempio:
-Interno:
 
+```text
+AF(this): sequenza degli elementi nella lista 'elementi'
 ```
-ArrayList<Integer> elementi
-```
-
-Valore astratto:
-
-```
-sequenza ordinata di interi
-```
-
-AF spiega "come leggere" lo stato interno.
 
 ---
 
-### 4. Invariante di Rappresentazione (RI)
+### RI – Invariante di Rappresentazione
 
-È una condizione che DEVE essere sempre vera nella struttura interna.
+Condizioni che DEVONO sempre essere vere internamente.
 
 Esempio:
 
-```
+```text
 RI(this): elementi != null && elementi non contiene null
 ```
 
-Serve a garantire che l’oggetto non sia corrotto.
+---
+
+### Mutabili vs Immutabili
+
+Tipi mutabili:
+
+- stato modificabile
+- metodi che cambiano i campi
+
+Tipi immutabili:
+
+- stato fissato nel costruttore
+- i metodi ritornano nuovi oggetti
 
 ---
 
-### 5. Mutabilità vs Immutabilità
+### Minimale Java necessario per Prog2
 
-Prog2 ti fa progettare:
+Serve solo:
 
-- **tipi mutabili** (lista personalizzata, set, stack…)
-- **tipi immutabili** (intervalli, punti, date…)
-
-L’immutabilità è importantissima per AF/RI.
-
----
-
-### 6. Java minimo indispensabile per Prog2
-
-Ti serve solo:
-
-- classi
-- costruttori
-- campi `private`
-- getter
-- array
-- ArrayList
-- eccezioni (`throw`, `throws`)
-- ereditarietà base
+- Classi
+- Costruttori
+- Campi privati
+- Array
+- List/ArrayList
+- Map/HashMap
+- Eccezioni
+- Ereditarietà base
 
 Non serve:
 
-- thread
-- I/O avanzato
-- GUI
-- librerie speciali
-
----
-
-### 7. HashMap, HashSet, List — spiegazione semplice per Prog2
-
-#### **HashMap** → Mappa chiave-valore
-
-Serve per associare una chiave a un valore.
-
-Esempi utili in Prog2:
-
-- mappa parola → occorrenze
-- mappa mese → numero giorni
-- mappa id → oggetto
-
-Funzionamento:
-
-- le chiavi sono uniche
-- inserimento/lettura è molto veloce
-
-Quando SI usa:
-
-- lookup veloce
-- vuoi mappare “X → Y”
-
-Quando NON si usa:
-
-- quando serve ordine
-- quando vuoi una sequenza indicizzata
-
----
-
-#### **HashSet** → Insieme di valori unici
-
-Serve quando ti interessa sapere se un valore esiste.
-
-Esempi Prog2:
-
-- insieme di interi già visti
-- raccolta senza duplicati
-
-Non ha indice.
-
----
-
-#### **List / ArrayList** → Sequenza ordinata
-
-Usa `ArrayList` il 99% delle volte.
-
-Quando usarlo:
-
-- vuoi una lista ordinata
-- vuoi accedere via indice
-
-Quando non usarlo:
-
-- quando vuoi unicità → usa Set
-- quando vuoi chiavi → usa HashMap
-
----
-
-### 8. Eccezioni: perché esistono in Prog2
-
-In Prog2 devi:
-
-- lanciare eccezioni quando `REQUIRES` non è rispettato
-- progettare metodi sicuri
-- specificare quali eccezioni vengono sollevate
-
-Esempio:
-
-```java
-if (n <= 0) throw new IllegalArgumentException();
-```
-
----
-
-### 9. Riepilogo "Zero to Hero" per arrivare pronti all’esame
-
-#### Devi sapere:
-
-- scrivere classi mutabili e immutabili corrette
-- scrivere AF & RI
-- scrivere specifiche REQUIRES/MODIFIES/EFFECTS
-- capire differenza tra rappresentazione e valore astratto
-- usare array e ArrayList
-- progettare gerarchie semplici
-
-#### NON devi sapere:
-
-- programmazione avanzata
-- framework
-- OOP complessa
-- design patterns
-- Java moderno
-
-Prog2 è ALGORITMI + PROGETTAZIONE.
+- Streams
+- Thread
+- Swing
+- Pattern Design complessi
 
 ---
 
 ## Risorse Utili
 
-- [Documentazione Ufficiale Java](https://docs.oracle.com/en/java/)
-
-- [Oracle Java Tutorials](https://docs.oracle.com/javase/tutorial/)
-
-- [Java Design Patterns](https://www.journaldev.com/1827/java-design-patterns-example-tutorial)
-
-- [Documentazione Ufficiale Java](https://docs.oracle.com/en/java/)
-
-- [Oracle Java Tutorials](https://docs.oracle.com/javase/tutorial/)
-
-- [Java Design Patterns](https://www.journaldev.com/1827/java-design-patterns-example-tutorial)
+- Documentazione Java
+- Oracle Java Tutorials
+- Java Collections Overview
+- Slide e esercizi di Programmazione 2
