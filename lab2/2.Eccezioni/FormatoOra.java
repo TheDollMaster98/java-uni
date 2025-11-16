@@ -59,7 +59,7 @@ public class FormatoOra {
             throw new DateTimeException("Formato ora non valido: " + s);
         }
 
-        // divido HH:MM
+        // divido HH:MM e max 2 elementi
         String[] orario = s.split(":", 2);
 
         // deve esserci 2 parti (min ed h)
