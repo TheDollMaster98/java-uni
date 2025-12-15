@@ -118,6 +118,10 @@ public class TopN {
         System.out.println(" ]");
     }
 
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);
         System.out.println("Inserisci almeno 2 numeri interi diversi tra loro (CTRL+D/Z per terminare):");
