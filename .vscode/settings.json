@@ -2,6 +2,7 @@
     "java.project.sourcePaths": [
         "lab1/*",
         "lab2/*",
+        "lab3/*"
     ],
     "java.project.referencedLibraries": [],
     "java.compile.nullAnalysis.mode": "disabled",
