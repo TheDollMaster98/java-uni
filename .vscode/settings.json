@@ -1,6 +1,9 @@
 {
     "java.project.sourcePaths": [
-        "."
+        "lab1/*",
+        "lab2/*",
     ],
-    "java.project.referencedLibraries": []
+    "java.project.referencedLibraries": [],
+    "java.compile.nullAnalysis.mode": "disabled",
+    "java.errors.incompleteClasspath.severity": "ignore"
 }

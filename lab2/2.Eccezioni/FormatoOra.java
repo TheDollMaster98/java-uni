@@ -49,9 +49,9 @@ public class FormatoOra {
      * OVERVIEW: converto le ore, lancio un eccezione per il Formato ora non valido:
      * + s *
      * 
-     * @param s
-     * @return
-     * @throws DateTimeException
+     * @param s orario in formato 24 ore (hh:mm)
+     * @return orario convertita in 12 ore
+     * @throws DateTimeException eccezione per formato ora non valido
      */
     public static String converti(String s) throws DateTimeException {
         // 1. deve contenere ':'

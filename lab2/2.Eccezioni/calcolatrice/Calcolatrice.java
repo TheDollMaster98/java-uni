@@ -42,7 +42,7 @@
  * $ java calcolatrice
  * Inserisci <operando1> <operatore> <operando2>. es: 4 + 3
  * 10 % 2
- * Operatore non riconosciuto
+ * Operatore non riconosciuto 
  */
 
 import java.util.InputMismatchException;
@@ -52,11 +52,45 @@ import java.util.Scanner;
 public class Calcolatrice {
     public static double calculate(double o1, double o2, char op)
             throws InputMismatchException, DivisionByZeroException {
-
-        return 2;
+        switch (op) {
+            case '+':
+                return o1 + o2;
+            case '-':
+                return o1 - o2;
+            case '*':
+                return o1 * o2;
+            case '/':
+                if (o2 == 0) {
+                    throw new DivisionByZeroException("Non è possibile dividere per 0.");
+                }
+                return o1 / o2;
+            default:
+                throw new InputMismatchException("Operatore non riconosciuto");
+        }
     }
 
     public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Inserisci <operando1> <operatore> <operando2>. es: 4 + 3");
 
+        double n1 = 0; // operando 1
+        double n2 = 0; // operando 2
+        String op = ""; // operatore
+
+        try {
+            n1 = s.nextDouble();
+            op = s.next();
+            n2 = s.nextDouble();
+            double ris = calculate(n1, n2, op.charAt(0));
+            System.out.println("Il risultato è " + ris);
+        } catch (InputMismatchException e) {
+            System.out.println("Operando non valido: è richiesto doubel");
+        } catch (NoSuchElementException e) {
+            System.out.println("Non sono stati inseriti tutti gli input richiesti.");
+        } catch (DivisionByZeroException e) {
+            System.out.println("Non è possibile dividere per 0.");
+        } finally {
+            s.close();
+        }
     }
 }
