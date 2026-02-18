@@ -4148,13 +4148,13 @@ Integer n = ultimo(List.of(1, 2, 3));      // → 3
 
 ### 14.6 Covarianza e Controvarianza
 
-- **Covarianza**: se S è sottotipo di T, allora Contenitore<S> è sottotipo di Contenitore<T>
+- **Covarianza**: se S è sottotipo di T, allora `Contenitore<S>` è sottotipo di `Contenitore<T>`
   (Java: solo con wildcards `? extends T`)
 
-- **Controvarianza**: se S è sottotipo di T, allora Contenitore<T> è sottotipo di Contenitore<S>
+- **Controvarianza**: se S è sottotipo di T, allora `Contenitore<T>` è sottotipo di `Contenitore<S>`
   (Java: solo con wildcards `? super T`)
 
-- **Invarianza**: Contenitore<S> e Contenitore<T> non hanno relazione di sottotipo
+- **Invarianza**: `Contenitore<S>` e `Contenitore<T>` non hanno relazione di sottotipo
   (Java: comportamento di default per i generics)
 
 ```java
