@@ -901,11 +901,11 @@ java.lang.Throwable
 
 ### Regole della gerarchia
 
-| Ramo                 | Significato                              | Il compilatore obbliga a gestirle? | Azione del programmatore            |
-| -------------------- | ---------------------------------------- | ---------------------------------- | ----------------------------------- |
-| `Error`              | Errore grave della JVM, irrecuperabile   | No                                 | **Non gestire**, non fare catch     |
-| `Exception` (direttamente) | Situazione anomala recuperabile    | **Si** (checked)                   | Dichiarare con `throws` o catturare |
-| `RuntimeException`   | Errore logico del programmatore          | No (unchecked)                     | Correggere il codice                |
+| Ramo                       | Significato                            | Il compilatore obbliga a gestirle? | Azione del programmatore            |
+| -------------------------- | -------------------------------------- | ---------------------------------- | ----------------------------------- |
+| `Error`                    | Errore grave della JVM, irrecuperabile | No                                 | **Non gestire**, non fare catch     |
+| `Exception` (direttamente) | Situazione anomala recuperabile        | **Si** (checked)                   | Dichiarare con `throws` o catturare |
+| `RuntimeException`         | Errore logico del programmatore        | No (unchecked)                     | Correggere il codice                |
 
 **Regola fondamentale:** la posizione nella gerarchia determina se un'eccezione e' checked o unchecked. Se estende `Exception` direttamente (senza passare da `RuntimeException`) e' **checked**. Se estende `RuntimeException` e' **unchecked**.
 
@@ -1015,14 +1015,14 @@ public void aggiungi(double quantita) {
 
 ### Tabella comparativa completa
 
-| Aspetto                | Checked (`extends Exception`)             | Unchecked (`extends RuntimeException`)              |
-| ---------------------- | ----------------------------------------- | --------------------------------------------------- |
-| **Compilatore**        | OBBLIGA a dichiararle (`throws`) o catturarle (`catch`) | NON obbliga                           |
-| **Tipo di errore**     | Situazione di dominio prevedibile e recuperabile | Errore logico del programmatore              |
-| **Dichiarazione**      | `throws` nella firma OBBLIGATORIO         | `throws` nella firma FACOLTATIVO                    |
-| **Responsabilita'**    | Del chiamante (decide come gestire)       | Del programmatore (deve correggere il codice)       |
-| **Esempi dal corso**   | `LiquidsException`, `GiornoException`     | `CapacityException`, `SorpresaException`, `EventoException` |
-| **Esempi standard JDK** | `IOException`, `SQLException`, `FileNotFoundException` | `NullPointerException`, `IllegalArgumentException`, `ClassCastException` |
+| Aspetto                 | Checked (`extends Exception`)                           | Unchecked (`extends RuntimeException`)                                   |
+| ----------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **Compilatore**         | OBBLIGA a dichiararle (`throws`) o catturarle (`catch`) | NON obbliga                                                              |
+| **Tipo di errore**      | Situazione di dominio prevedibile e recuperabile        | Errore logico del programmatore                                          |
+| **Dichiarazione**       | `throws` nella firma OBBLIGATORIO                       | `throws` nella firma FACOLTATIVO                                         |
+| **Responsabilita'**     | Del chiamante (decide come gestire)                     | Del programmatore (deve correggere il codice)                            |
+| **Esempi dal corso**    | `LiquidsException`, `GiornoException`                   | `CapacityException`, `SorpresaException`, `EventoException`              |
+| **Esempi standard JDK** | `IOException`, `SQLException`, `FileNotFoundException`  | `NullPointerException`, `IllegalArgumentException`, `ClassCastException` |
 
 ### Quando usare l'una o l'altra
 
@@ -1175,14 +1175,14 @@ public static void esempio() {
 
 **Casi in cui finally viene eseguito:**
 
-| Situazione                            | `finally` eseguito? |
-| ------------------------------------- | -------------------- |
-| Nessuna eccezione                     | Si                   |
-| Eccezione catturata dal `catch`       | Si                   |
-| Eccezione NON catturata               | Si (poi propaga)     |
-| `return` nel `try`                    | Si (prima del return)|
-| `return` nel `catch`                  | Si (prima del return)|
-| `System.exit()` nel try/catch         | **No** (unica eccezione) |
+| Situazione                      | `finally` eseguito?      |
+| ------------------------------- | ------------------------ |
+| Nessuna eccezione               | Si                       |
+| Eccezione catturata dal `catch` | Si                       |
+| Eccezione NON catturata         | Si (poi propaga)         |
+| `return` nel `try`              | Si (prima del return)    |
+| `return` nel `catch`            | Si (prima del return)    |
+| `System.exit()` nel try/catch   | **No** (unica eccezione) |
 
 ### Esempio completo dal lab: Calcolatrice
 
@@ -1317,13 +1317,13 @@ try (
 
 ### Vantaggi rispetto a try-catch-finally
 
-| Aspetto              | try-catch-finally                  | try-with-resources                 |
-| -------------------- | ---------------------------------- | ---------------------------------- |
-| Chiusura risorsa     | Manuale nel `finally`              | Automatica                         |
-| Rischio dimenticanza | Alto                               | Nullo                              |
-| Codice               | Verboso                            | Conciso e leggibile                |
-| Eccezioni in close() | Possono mascherare l'eccezione originale | Gestite come *suppressed exceptions* |
-| Null check           | Necessario nel finally             | Non necessario                     |
+| Aspetto              | try-catch-finally                        | try-with-resources                   |
+| -------------------- | ---------------------------------------- | ------------------------------------ |
+| Chiusura risorsa     | Manuale nel `finally`                    | Automatica                           |
+| Rischio dimenticanza | Alto                                     | Nullo                                |
+| Codice               | Verboso                                  | Conciso e leggibile                  |
+| Eccezioni in close() | Possono mascherare l'eccezione originale | Gestite come _suppressed exceptions_ |
+| Null check           | Necessario nel finally                   | Non necessario                       |
 
 ### Esempio con Scanner nel corso
 
@@ -1467,13 +1467,13 @@ throw new TipoEccezione("messaggio descrittivo");
 
 ### Differenza tra throw e throws
 
-| Aspetto     | `throw`                                    | `throws`                                    |
-| ----------- | ------------------------------------------ | ------------------------------------------- |
-| **Cosa e'** | Un'**istruzione** (statement)              | Una **clausola** nella firma del metodo     |
-| **Dove**    | Dentro il corpo del metodo                 | Nella dichiarazione del metodo              |
-| **Funzione**| **Lancia** un'eccezione concreta           | **Dichiara** che il metodo potrebbe lanciare|
-| **Sintassi**| `throw new XException("msg");`             | `void metodo() throws XException { }`      |
-| **Oggetto** | Richiede un **oggetto** eccezione (`new`)  | Richiede un **tipo** di eccezione           |
+| Aspetto      | `throw`                                   | `throws`                                     |
+| ------------ | ----------------------------------------- | -------------------------------------------- |
+| **Cosa e'**  | Un'**istruzione** (statement)             | Una **clausola** nella firma del metodo      |
+| **Dove**     | Dentro il corpo del metodo                | Nella dichiarazione del metodo               |
+| **Funzione** | **Lancia** un'eccezione concreta          | **Dichiara** che il metodo potrebbe lanciare |
+| **Sintassi** | `throw new XException("msg");`            | `void metodo() throws XException { }`        |
+| **Oggetto**  | Richiede un **oggetto** eccezione (`new`) | Richiede un **tipo** di eccezione            |
 
 ### Esempi dal corso
 
@@ -1632,11 +1632,11 @@ public class DivisionByZeroException extends ArithmeticException {
 
 ### Pattern d'esame ricorrente nei 3 esami
 
-| Esame              | Checked (`extends Exception`)                 | Unchecked (`extends RuntimeException`)              |
-| ------------------ | --------------------------------------------- | --------------------------------------------------- |
-| Simulazione Vetreria | `LiquidsException` (liquidi incompatibili)  | `CapacityException` (capacita' superata)            |
-| Dicembre           | `GiornoException` (giorno occupato)           | `SorpresaException` (sorpresa duplicata)            |
-| Gennaio            | *(non presente)*                              | `EventoException` (evento duplicato)                |
+| Esame                | Checked (`extends Exception`)              | Unchecked (`extends RuntimeException`)   |
+| -------------------- | ------------------------------------------ | ---------------------------------------- |
+| Simulazione Vetreria | `LiquidsException` (liquidi incompatibili) | `CapacityException` (capacita' superata) |
+| Dicembre             | `GiornoException` (giorno occupato)        | `SorpresaException` (sorpresa duplicata) |
+| Gennaio              | _(non presente)_                           | `EventoException` (evento duplicato)     |
 
 **Lo schema e' costante:** errore di dominio recuperabile → `extends Exception` (checked); errore logico del chiamante → `extends RuntimeException` (unchecked).
 
@@ -1771,15 +1771,15 @@ class Figlio extends Padre {
 
 ### Tabella riassuntiva delle regole
 
-| Azione nell'override                                    | Consentita? |
-| ------------------------------------------------------- | ----------- |
-| Dichiarare le **stesse** checked exceptions del padre   | Si          |
-| Dichiarare un **sottoinsieme** delle checked del padre  | Si          |
-| Dichiarare **nessuna** checked exception                | Si          |
-| Dichiarare un **sottotipo** di un'eccezione del padre   | Si          |
-| Aggiungere **nuove** checked exceptions                 | **NO**      |
-| Dichiarare un'eccezione **piu' ampia** di quella del padre | **NO**   |
-| Aggiungere **unchecked** exceptions                     | Si (sempre) |
+| Azione nell'override                                       | Consentita? |
+| ---------------------------------------------------------- | ----------- |
+| Dichiarare le **stesse** checked exceptions del padre      | Si          |
+| Dichiarare un **sottoinsieme** delle checked del padre     | Si          |
+| Dichiarare **nessuna** checked exception                   | Si          |
+| Dichiarare un **sottotipo** di un'eccezione del padre      | Si          |
+| Aggiungere **nuove** checked exceptions                    | **NO**      |
+| Dichiarare un'eccezione **piu' ampia** di quella del padre | **NO**      |
+| Aggiungere **unchecked** exceptions                        | Si (sempre) |
 
 ### Esempio pratico con la gerarchia del corso
 
@@ -1956,12 +1956,13 @@ public class Ricevimento {
 
 Esempio concreto dalla simulazione Vetreria:
 
-| Fonte            | `LiquidsException`        | `CapacityException`         |
-| ---------------- | ------------------------- | --------------------------- |
-| **ScalaValutazione** | unchecked (RuntimeException) | checked (Exception)     |
-| **README**        | **checked** (Exception)   | **unchecked** (RuntimeException) |
+| Fonte                | `LiquidsException`           | `CapacityException`              |
+| -------------------- | ---------------------------- | -------------------------------- |
+| **ScalaValutazione** | unchecked (RuntimeException) | checked (Exception)              |
+| **README**           | **checked** (Exception)      | **unchecked** (RuntimeException) |
 
 Il README descrive il **significato semantico** delle eccezioni:
+
 - `LiquidsException`: "liquidi incompatibili" → situazione di **dominio recuperabile** → **checked**
 - `CapacityException`: "capacita' superata" → **errore logico** del chiamante → **unchecked**
 
@@ -2407,6 +2408,7 @@ public Iterator<Contenitore> iterator() {
 ```
 
 ---
+
 ---
 
 # PARTE 5 -- Astrazione e Specifiche
@@ -2511,11 +2513,11 @@ public void aggiungi(Contenitore c) {
 
 La clausola `MODIFIES` elenca **tutti** gli oggetti il cui stato viene alterato durante l'esecuzione del metodo. Gli oggetti tipici sono:
 
-| Oggetto        | Significato                                          |
-| -------------- | ---------------------------------------------------- |
-| `this`         | L'oggetto su cui viene invocato il metodo            |
-| un parametro   | Un parametro passato al metodo (es. `sorgente`)      |
-| `System.out`   | Il metodo produce output su console                  |
+| Oggetto      | Significato                                     |
+| ------------ | ----------------------------------------------- |
+| `this`       | L'oggetto su cui viene invocato il metodo       |
+| un parametro | Un parametro passato al metodo (es. `sorgente`) |
+| `System.out` | Il metodo produce output su console             |
 
 Se il metodo e' un **osservatore puro** (non modifica nulla), la clausola MODIFIES e' assente oppure vale `-`.
 
@@ -2611,13 +2613,13 @@ Un metodo si dice **totale** se e' definito per **ogni** input ammesso dai tipi 
 
 Un metodo si dice **parziale** se ha precondizioni nel REQUIRES che restringono il dominio degli input. Se il chiamante viola queste precondizioni, il comportamento e' **indefinito**.
 
-| Caratteristica          | Metodo Totale                       | Metodo Parziale                             |
-| ----------------------- | ----------------------------------- | ------------------------------------------- |
-| REQUIRES                | Assente o `-`                       | Presente con condizioni restrittive         |
-| Input non valido        | Lancia eccezione (comportamento definito) | Comportamento indefinito                    |
-| Responsabilita' errori  | L'implementatore gestisce tutto     | Il chiamante deve garantire le precondizioni|
-| Robustezza              | Alta                                | Bassa                                       |
-| Nei metodi d'esame      | Quasi sempre usato                  | Raro                                        |
+| Caratteristica         | Metodo Totale                             | Metodo Parziale                              |
+| ---------------------- | ----------------------------------------- | -------------------------------------------- |
+| REQUIRES               | Assente o `-`                             | Presente con condizioni restrittive          |
+| Input non valido       | Lancia eccezione (comportamento definito) | Comportamento indefinito                     |
+| Responsabilita' errori | L'implementatore gestisce tutto           | Il chiamante deve garantire le precondizioni |
+| Robustezza             | Alta                                      | Bassa                                        |
+| Nei metodi d'esame     | Quasi sempre usato                        | Raro                                         |
 
 ### Esempio di metodo parziale
 
@@ -2753,12 +2755,12 @@ public class Vetreria implements Iterable<Contenitore> {
 
 Le operazioni di un ADT si classificano in quattro categorie:
 
-| Categoria       | Descrizione                            | Input           | Output             | Esempio dal corso                    |
-| --------------- | -------------------------------------- | --------------- | ------------------ | ------------------------------------ |
-| **Creatore**    | Crea nuove istanze da zero             | Argomenti       | Nuova istanza      | `new Sfera(5.0)`, `new Vetreria()`  |
-| **Produttore**  | Crea nuove istanze da istanze esistenti| Istanza + args  | Nuova istanza      | `clone()`, `estrai("acqua")`         |
-| **Osservatore** | Restituisce informazioni senza modificare | Istanza      | Valore             | `calcolaVolume()`, `getLiquido()`    |
-| **Mutatore**    | Modifica lo stato dell'istanza         | Istanza + args  | void (tipicamente) | `versa()`, `aggiungi()`, `inserisci()` |
+| Categoria       | Descrizione                               | Input          | Output             | Esempio dal corso                      |
+| --------------- | ----------------------------------------- | -------------- | ------------------ | -------------------------------------- |
+| **Creatore**    | Crea nuove istanze da zero                | Argomenti      | Nuova istanza      | `new Sfera(5.0)`, `new Vetreria()`     |
+| **Produttore**  | Crea nuove istanze da istanze esistenti   | Istanza + args | Nuova istanza      | `clone()`, `estrai("acqua")`           |
+| **Osservatore** | Restituisce informazioni senza modificare | Istanza        | Valore             | `calcolaVolume()`, `getLiquido()`      |
+| **Mutatore**    | Modifica lo stato dell'istanza            | Istanza + args | void (tipicamente) | `versa()`, `aggiungi()`, `inserisci()` |
 
 ```java
 public abstract class Contenitore implements Comparable<Contenitore>, Cloneable {
@@ -2796,14 +2798,14 @@ public abstract class Contenitore implements Comparable<Contenitore>, Cloneable 
 
 ### ADT immutabile vs ADT mutabile
 
-| Aspetto         | ADT Immutabile                             | ADT Mutabile                               |
-| --------------- | ------------------------------------------ | ------------------------------------------ |
-| Definizione     | Lo stato non cambia dopo la creazione      | Lo stato puo' cambiare dopo la creazione   |
-| Mutatori        | **Nessuno**                                | Presenti                                   |
-| Produttori      | Restituiscono **nuove** istanze            | Possono modificare this o restituire nuove |
-| Thread safety   | Intrinsecamente thread-safe                | Richiede sincronizzazione                  |
-| Esempio JDK     | `String`, `Integer`, `LocalDate`           | `ArrayList`, `StringBuilder`, `HashMap`    |
-| Esempio esame   | `Sorpresa` (nome + costo fissi)            | `Contenitore` (liquido cambia con `versa`) |
+| Aspetto       | ADT Immutabile                        | ADT Mutabile                               |
+| ------------- | ------------------------------------- | ------------------------------------------ |
+| Definizione   | Lo stato non cambia dopo la creazione | Lo stato puo' cambiare dopo la creazione   |
+| Mutatori      | **Nessuno**                           | Presenti                                   |
+| Produttori    | Restituiscono **nuove** istanze       | Possono modificare this o restituire nuove |
+| Thread safety | Intrinsecamente thread-safe           | Richiede sincronizzazione                  |
+| Esempio JDK   | `String`, `Integer`, `LocalDate`      | `ArrayList`, `StringBuilder`, `HashMap`    |
+| Esempio esame | `Sorpresa` (nome + costo fissi)       | `Contenitore` (liquido cambia con `versa`) |
 
 ```java
 // IMMUTABILE: una volta creata, la Sorpresa non cambia mai stato.
@@ -3000,11 +3002,11 @@ public class Giocattolo extends Sorpresa {
 
 ### Errori comuni nella AF
 
-| Errore                                        | Esempio sbagliato                              | Versione corretta                                           |
-| --------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
-| Descrivere i tipi invece del significato      | `AF: liquido e' un String, quantita e' double` | `AF: contiene 'quantita' unita' di 'liquido'`              |
-| Dimenticare i casi speciali                   | `AF: contiene 'liquido'`                       | `AF: contiene 'liquido'. Se null, e' vuoto.`               |
-| Ripetere i campi senza dare significato       | `AF: this.raggio e' il raggio`                 | `AF: una sfera di raggio 'raggio'` (descrive il CONCETTO)  |
+| Errore                                   | Esempio sbagliato                              | Versione corretta                                         |
+| ---------------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Descrivere i tipi invece del significato | `AF: liquido e' un String, quantita e' double` | `AF: contiene 'quantita' unita' di 'liquido'`             |
+| Dimenticare i casi speciali              | `AF: contiene 'liquido'`                       | `AF: contiene 'liquido'. Se null, e' vuoto.`              |
+| Ripetere i campi senza dare significato  | `AF: this.raggio e' il raggio`                 | `AF: una sfera di raggio 'raggio'` (descrive il CONCETTO) |
 
 ---
 
@@ -3315,16 +3317,16 @@ public class Vetreria {
 
 ### Riepilogo delle difese contro la rep exposure
 
-| Tecnica                            | Quando usarla                      | Esempio                                        |
-| ---------------------------------- | ---------------------------------- | ----------------------------------------------- |
-| Campi `private`                    | **SEMPRE**                         | `private final List<T> lista;`                  |
-| Campi `final`                      | Sempre che possibile               | `private final double raggio;`                  |
-| Copia difensiva in input           | Costruttori con parametri mutabili | `this.lista = new ArrayList<>(parametro);`      |
-| Copia difensiva in output          | Getter di strutture mutabili       | `return new ArrayList<>(lista);`                |
-| `Collections.unmodifiableList()`   | Vista read-only senza copia        | `return Collections.unmodifiableList(lista);`   |
-| `List.copyOf()` (Java 10+)        | Copia immutabile concisa           | `return List.copyOf(lista);`                    |
-| Restituire tipi immutabili         | Getter di campi immutabili         | `return nome;` (String e' immutabile)           |
-| `clone()` su oggetti mutabili      | Getter/setter di oggetti mutabili  | `return elemento.clone();`                      |
+| Tecnica                          | Quando usarla                      | Esempio                                       |
+| -------------------------------- | ---------------------------------- | --------------------------------------------- |
+| Campi `private`                  | **SEMPRE**                         | `private final List<T> lista;`                |
+| Campi `final`                    | Sempre che possibile               | `private final double raggio;`                |
+| Copia difensiva in input         | Costruttori con parametri mutabili | `this.lista = new ArrayList<>(parametro);`    |
+| Copia difensiva in output        | Getter di strutture mutabili       | `return new ArrayList<>(lista);`              |
+| `Collections.unmodifiableList()` | Vista read-only senza copia        | `return Collections.unmodifiableList(lista);` |
+| `List.copyOf()` (Java 10+)       | Copia immutabile concisa           | `return List.copyOf(lista);`                  |
+| Restituire tipi immutabili       | Getter di campi immutabili         | `return nome;` (String e' immutabile)         |
+| `clone()` su oggetti mutabili    | Getter/setter di oggetti mutabili  | `return elemento.clone();`                    |
 
 ### Nota sull'esame
 
@@ -3431,10 +3433,10 @@ L'OVERVIEW vale **0.5 punti per classe** nella scala di valutazione dell'esame. 
 
 | Elemento   | Punti per classe | Classi tipiche | Punti totali tipici |
 | ---------- | ---------------- | -------------- | ------------------- |
-| OVERVIEW   | 0.5              | 5-6 classi     | 2.5 - 3.0          |
-| AF(this)   | 0.5              | 4-5 classi     | 2.0 - 2.5          |
-| RI(this)   | 0.5              | 2-3 classi     | 1.0 - 1.5          |
-| **Totale** |                  |                | **5.5 - 7.0**      |
+| OVERVIEW   | 0.5              | 5-6 classi     | 2.5 - 3.0           |
+| AF(this)   | 0.5              | 4-5 classi     | 2.0 - 2.5           |
+| RI(this)   | 0.5              | 2-3 classi     | 1.0 - 1.5           |
+| **Totale** |                  |                | **5.5 - 7.0**       |
 
 Questi sono **punti facili**: richiedono poche righe di codice e non dipendono dalla correttezza dell'implementazione. **Dimentiarli e' un errore inaccettabile.**
 
@@ -3540,7 +3542,6 @@ public class Vetreria implements Iterable<Contenitore> {
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
 ---
 
 # PARTE 6 – Concetti Avanzati
@@ -3627,13 +3628,13 @@ public class Inventario implements Cloneable {
 
 **Regola pratica:**
 
-| Tipo del campo       | Shallow copy sufficiente? | Serve deep copy?           |
-| -------------------- | ------------------------- | -------------------------- |
-| Tipo primitivo       | Si                        | No                         |
-| `String`             | Si (immutabile)           | No                         |
-| `final` immutabile   | Si                        | No                         |
-| `ArrayList`, array   | **No**                    | **Si** (copiare la lista)  |
-| Oggetto mutabile     | **No**                    | **Si** (clonare l'oggetto) |
+| Tipo del campo     | Shallow copy sufficiente? | Serve deep copy?           |
+| ------------------ | ------------------------- | -------------------------- |
+| Tipo primitivo     | Si                        | No                         |
+| `String`           | Si (immutabile)           | No                         |
+| `final` immutabile | Si                        | No                         |
+| `ArrayList`, array | **No**                    | **Si** (copiare la lista)  |
+| Oggetto mutabile   | **No**                    | **Si** (clonare l'oggetto) |
 
 ### Quando usare `clone()` nell'esame
 
@@ -3687,12 +3688,12 @@ Java permette di definire classi all'interno di altre classi. Esistono quattro t
 
 ### Classificazione
 
-| Tipo                   | Dichiarazione              | Accesso alla classe esterna | Uso tipico                     |
-| ---------------------- | -------------------------- | --------------------------- | ------------------------------ |
-| Static nested class    | `static class Nested {}`   | Solo membri statici         | Raggruppamento logico          |
-| Inner class (non-static) | `class Inner {}`         | Tutti i membri              | Accoppiamento forte con outer  |
-| Local class            | Dentro un metodo           | Tutti + variabili locali final | Iterator personalizzati     |
-| Anonymous class        | `new Interfaccia() {...}`  | Tutti + variabili locali final | Implementazioni al volo     |
+| Tipo                     | Dichiarazione             | Accesso alla classe esterna    | Uso tipico                    |
+| ------------------------ | ------------------------- | ------------------------------ | ----------------------------- |
+| Static nested class      | `static class Nested {}`  | Solo membri statici            | Raggruppamento logico         |
+| Inner class (non-static) | `class Inner {}`          | Tutti i membri                 | Accoppiamento forte con outer |
+| Local class              | Dentro un metodo          | Tutti + variabili locali final | Iterator personalizzati       |
+| Anonymous class          | `new Interfaccia() {...}` | Tutti + variabili locali final | Implementazioni al volo       |
 
 ### Static nested class
 
@@ -4045,6 +4046,7 @@ public class Sfera extends Contenitore {
 ```
 
 **Dove si vede nell'esame:**
+
 - `toString()` nella classe base chiama `calcolaVolume()` / `getCosto()` / `getDurata()`
 - `compareTo()` nella classe base chiama il metodo astratto
 - Qualsiasi metodo concreto della classe astratta che invoca un metodo astratto
@@ -4131,13 +4133,13 @@ Contenitore c = ContenitoreFactory.crea(tipo, parametri);
 
 ### Due modi di riusare il codice
 
-| Aspetto        | Ereditarieta' (`extends`)        | Composizione (`has-a`)            |
-| -------------- | -------------------------------- | --------------------------------- |
-| Relazione      | IS-A ("e' un")                   | HAS-A ("ha un")                   |
-| Accoppiamento  | Forte (figlio dipende dal padre) | Debole (oggetto delegato)         |
-| Polimorfismo   | Si                               | Si (tramite interfacce)           |
-| Flessibilita'  | Limitata (un solo extends)       | Alta (puo' comporre piu' oggetti) |
-| Rischio        | Fragile base class problem       | Nessuno                           |
+| Aspetto       | Ereditarieta' (`extends`)        | Composizione (`has-a`)            |
+| ------------- | -------------------------------- | --------------------------------- |
+| Relazione     | IS-A ("e' un")                   | HAS-A ("ha un")                   |
+| Accoppiamento | Forte (figlio dipende dal padre) | Debole (oggetto delegato)         |
+| Polimorfismo  | Si                               | Si (tramite interfacce)           |
+| Flessibilita' | Limitata (un solo extends)       | Alta (puo' comporre piu' oggetti) |
+| Rischio       | Fragile base class problem       | Nessuno                           |
 
 ### Quando usare l'ereditarieta'
 
@@ -4263,122 +4265,66 @@ Nell'esame di Prog2, l'ereditarieta' e' usata per la gerarchia richiesta dal tes
 
 Questa combinazione e' il pattern standard di ogni esame.
 
-
 ---
+
 # PARTE 7 – Preparazione Esame
+
 ---
 
-## 25. Filtro teoria – 30+ domande e risposte
+## 25. Filtro teoria – Ripasso rapido
 
-### A. OOP e Polimorfismo
+### OOP e Polimorfismo
 
-**1. Cos'e' il polimorfismo?**
-Il polimorfismo permette a variabili e metodi di assumere forme diverse a seconda del tipo dinamico dell'oggetto. Il dispatch dinamico seleziona a runtime il metodo del tipo dinamico.
+- **Polimorfismo**: variabili e metodi assumono forme diverse in base al tipo dinamico; il dispatch dinamico sceglie a runtime il metodo della classe effettiva.
+- **Tipo statico vs dinamico**: statico = dichiarato (compile-time), dinamico = effettivo dell'oggetto (runtime, assegnato con `new`).
+- **Dispatch dinamico**: a runtime Java chiama il metodo del tipo dinamico, non di quello dichiarato. Vale solo per metodi d'istanza, NON per `static`.
+- **Overriding vs overloading**: override = stessa firma, late binding (runtime). Overload = stesso nome ma parametri diversi, early binding (compile-time).
+- **`static` e override**: i metodi `static` non si possono override, subiscono hiding (risolti con early binding).
+- **`final`**: su metodo = non override-abile; su classe = non estendibile; su variabile = assegnabile una sola volta.
 
-**2. Differenza tra tipo statico e tipo dinamico?**
-Il tipo statico e' quello dichiarato (compile-time), il tipo dinamico e' quello effettivo dell'oggetto (runtime, assegnato con `new`). Il compilatore controlla il tipo statico, il dispatch esegue il metodo del tipo dinamico.
+### Classi Astratte e Interfacce
 
-**3. Cos'e' il dispatch dinamico?**
-A runtime, Java chiama il metodo della classe effettiva dell'oggetto (tipo dinamico), non della classe dichiarata. Funziona per metodi d'istanza, NON per metodi static.
+- **Classe astratta vs interfaccia**: astratta ha stato, costruttore, metodi concreti/astratti, singola ereditarieta'. Interfaccia: no stato d'istanza, no costruttore, metodi astratti + `default`, multipla implementazione.
+- **Istanziare classe astratta**: no, si istanziano solo le sottoclassi concrete.
+- **Costruttore in classe astratta**: si, viene invocato dalle sottoclassi via `super()`.
+- **Metodi `default`**: metodi con implementazione nell'interfaccia (da Java 8); le classi possono usarli o fare override.
 
-**4. Differenza tra overriding e overloading?**
-Overriding: ridefinire un metodo ereditato (stessa firma). Overloading: definire piu' metodi con lo stesso nome ma parametri diversi. Override usa late binding (runtime), overload usa early binding (compile-time).
+### Eccezioni
 
-**5. Un metodo static puo' essere override?**
-No. I metodi static subiscono hiding, non overriding. Vengono risolti con early binding (tipo statico).
+- **Checked vs unchecked**: checked estendono `Exception` (obbligatorio `throws`/`catch`), unchecked estendono `RuntimeException` (non obbligatorio).
+- **Checked non dichiarata**: errore di compilazione.
+- **Override e checked**: l'override non puo' aggiungere nuove checked; puo' dichiarare le stesse, un sottoinsieme, o nessuna.
+- **`finally`**: eseguito sempre, con o senza eccezione. Usato per rilascio risorse.
+- **`try-with-resources`**: chiude automaticamente risorse `AutoCloseable` alla fine del blocco try.
 
-**6. Cosa significa `final` su metodo/classe/variabile?**
-Su metodo: non override-abile. Su classe: non estendibile. Su variabile: assegnabile una sola volta (costante per primitivi, riferimento fisso per oggetti).
+### Specifiche e Astrazione
 
-### B. Classi Astratte e Interfacce
+- **REQUIRES / MODIFIES / EFFECTS**: precondizioni, oggetti modificati, postcondizioni.
+- **Metodo totale vs parziale**: totale funziona per ogni input; parziale ha precondizioni nel REQUIRES. Si rende totale lanciando eccezioni sui casi non validi.
+- **ADT (Abstract Data Type)**: tipo definito dalle sue operazioni (creatori, produttori, osservatori, mutatori), non dalla rappresentazione.
+- **AF (Funzione di Astrazione)**: mappa la rappresentazione concreta (campi privati) al valore astratto percepito dall'utente.
+- **RI (Invariante di Rappresentazione)**: condizione booleana vera per ogni istanza valida in ogni momento; garantisce la consistenza interna.
 
-**7. Differenza tra classe astratta e interfaccia?**
-Classe astratta: puo' avere stato (campi), costruttore, metodi concreti e astratti, singola ereditarieta'. Interfaccia: nessuno stato d'istanza, nessun costruttore, metodi astratti (+ default da Java 8), multipla implementazione.
+### Iteratori e Collections
 
-**8. Si puo' istanziare una classe astratta?**
-No. Si possono solo istanziare le sottoclassi concrete.
+- **Iterable vs Iterator**: `Iterable<T>` ha `iterator()` e permette il for-each; `Iterator<T>` ha `hasNext()`, `next()`, `remove()`.
+- **Perche' Iterable**: permette l'uso nel for-each (`for (T x : oggetto)`).
+- **Rimuovere durante iterazione**: usare `Iterator.remove()` dopo `next()`, mai `list.remove()` dentro un for-each.
+- **Comparable vs Comparator**: `Comparable` = ordine naturale interno (`compareTo`); `Comparator` = ordine esterno (`compare`), usabile come lambda.
+- **`compareTo` e `equals`**: `compareTo == 0` non implica `equals == true`. Attenzione: `TreeSet` usa `compareTo` per uguaglianza.
 
-**9. Una classe astratta puo' avere costruttore?**
-Si, e viene chiamato con `super()` dalle sottoclassi. Non puo' essere chiamato direttamente con `new`.
+### Contratti e Metodi Fondamentali
 
-**10. Cosa sono i metodi default nelle interfacce?**
-Metodi con implementazione di default introdotti in Java 8. Le classi che implementano l'interfaccia possono usare il default o fare override.
+- **Contratto di `equals`**: riflessivo, simmetrico, transitivo, consistente, `x.equals(null) == false`. Se si cambia `equals` si DEVE cambiare `hashCode`.
+- **`hashCode` e `equals`**: se `x.equals(y)` allora `x.hashCode() == y.hashCode()`, altrimenti `HashSet`/`HashMap` non funzionano.
+- **Shallow vs deep copy**: shallow copia solo i riferimenti (oggetti condivisi); deep copia anche gli oggetti referenziati.
 
-### C. Eccezioni
+### Principi di Progettazione
 
-**11. Differenza tra checked e unchecked exception?**
-Checked: extends `Exception` (direttamente), obbligatorio dichiararle con `throws` o catturarle. Unchecked: extends `RuntimeException`, non obbligatorio dichiararle. Checked = situazione recuperabile, Unchecked = errore logico del programmatore.
-
-**12. Cosa succede se un metodo lancia una checked exception non dichiarata?**
-Errore di compilazione. Il compilatore controlla che tutte le checked exceptions siano dichiarate o catturate.
-
-**13. In un override, posso aggiungere nuove checked exceptions?**
-No. L'override puo' dichiarare le stesse eccezioni del padre, un sottoinsieme, o nessuna. Non puo' aggiungerne di nuove.
-
-**14. Cosa fa `finally`?**
-Il blocco `finally` viene eseguito SEMPRE, sia che si verifichi un'eccezione sia che non si verifichi. Usato per rilasciare risorse.
-
-**15. Cos'e' il try-with-resources?**
-Sintassi che auto-chiude risorse `AutoCloseable` alla fine del blocco try: `try (Scanner s = new Scanner(...)) { ... }`.
-
-### D. Specifiche e Astrazione
-
-**16. Cosa sono REQUIRES, MODIFIES, EFFECTS?**
-Clausole della specifica di un metodo. REQUIRES: precondizioni. MODIFIES: quali oggetti vengono modificati. EFFECTS: postcondizioni (cosa fa il metodo quando REQUIRES e' soddisfatto).
-
-**17. Differenza tra metodo totale e parziale?**
-Totale: funziona per ogni input (nessun REQUIRES restrittivo). Parziale: ha precondizioni specifiche nel REQUIRES. Un metodo parziale puo' essere reso totale aggiungendo controlli e lanciando eccezioni.
-
-**18. Cos'e' un ADT?**
-Abstract Data Type: tipo definito dalle sue operazioni (creatori, produttori, osservatori, mutatori) e non dalla sua rappresentazione interna.
-
-**19. Cos'e' la funzione di astrazione (AF)?**
-Mappatura dalla rappresentazione concreta (campi privati) al valore astratto che l'utente percepisce. Descrive il significato dei campi.
-
-**20. Cos'e' l'invariante di rappresentazione (RI)?**
-Condizione booleana che deve essere vera per OGNI istanza valida in OGNI momento. Garantisce la consistenza della rappresentazione interna.
-
-### E. Iteratori e Collections
-
-**21. Differenza tra Iterable e Iterator?**
-`Iterable<T>` ha un metodo `iterator()` che restituisce un `Iterator<T>`. `Iterator<T>` ha `hasNext()`, `next()` e `remove()`. Iterable permette il for-each, Iterator esegue l'iterazione.
-
-**22. Perche' una classe implementa Iterable?**
-Per poter essere usata nel costrutto for-each: `for (T x : oggettoIterable) { ... }`.
-
-**23. Come si rimuove un elemento durante l'iterazione senza ConcurrentModificationException?**
-Usando `Iterator.remove()` dopo `next()`. NON usare `list.remove()` dentro un for-each.
-
-**24. Differenza tra Comparable e Comparator?**
-`Comparable<T>`: ordine naturale, metodo `compareTo(T)` nella classe stessa. `Comparator<T>`: ordine esterno, metodo `compare(T, T)` in oggetto separato o lambda.
-
-**25. compareTo restituisce 0 implica equals true?**
-Non necessariamente. Puo' esserci incoerenza intenzionale (es. due Cerimonie con nomi diversi ma stessa durata). Attenzione: `TreeSet` usa `compareTo` per uguaglianza!
-
-### F. Contratti e Metodi Fondamentali
-
-**26. Contratto di equals?**
-Riflessivo (`x.equals(x)==true`), simmetrico, transitivo, consistente, `x.equals(null)==false`. Se si cambia equals si DEVE cambiare hashCode.
-
-**27. Perche' cambiare hashCode quando si cambia equals?**
-Contratto: se `x.equals(y)` allora `x.hashCode() == y.hashCode()`. Altrimenti `HashSet` e `HashMap` non funzionano correttamente.
-
-**28. Differenza tra shallow copy e deep copy?**
-Shallow: copia solo i riferimenti (oggetti interni condivisi). Deep: copia anche gli oggetti referenziati (copia indipendente).
-
-### G. Principi di Progettazione
-
-**29. Cos'e' il principio di Liskov (LSP)?**
-Se S e' sottotipo di T, gli oggetti di T possono essere sostituiti con oggetti di S senza alterare la correttezza. La sottoclasse non puo' avere precondizioni piu' restrittive ne' postcondizioni meno restrittive.
-
-**30. Composizione vs Ereditarieta'?**
-Ereditarieta': relazione IS-A. Composizione: relazione HAS-A. Preferire composizione quando non serve polimorfismo: piu' flessibile e meno accoppiata.
-
-**31. Cos'e' la rep exposure?**
-Quando la rappresentazione interna (campi privati) viene esposta all'esterno, permettendo a codice esterno di violare l'RI. Si previene con copia difensiva.
-
-**32. Cos'e' l'astrazione per specifica?**
-Il chiamante usa il metodo basandosi SOLO sulla sua specifica (REQUIRES/EFFECTS), senza conoscere ne' dipendere dall'implementazione.
+- **Principio di Liskov (LSP)**: se S sottotipo di T, gli oggetti di T sono sostituibili con S senza alterare la correttezza. No precondizioni piu' restrittive, no postcondizioni meno restrittive.
+- **Composizione vs ereditarieta'**: ereditarieta' = IS-A, composizione = HAS-A. Preferire composizione quando non serve polimorfismo.
+- **Rep exposure**: la rappresentazione interna viene esposta all'esterno, permettendo violazioni dell'RI. Si previene con copia difensiva.
+- **Astrazione per specifica**: il chiamante usa il metodo basandosi SOLO sulla specifica, senza conoscere l'implementazione.
 
 ---
 
