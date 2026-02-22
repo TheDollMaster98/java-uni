@@ -340,9 +340,78 @@ public class Test {
 | `throws`         | Dichiara che un metodo PUO' lanciare un'eccezione (obbligatorio per checked). |
 | `throw`          | Lancia effettivamente un'eccezione: `throw new MiaException("msg")`.          |
 
+### Commenti di specifica (OVERVIEW, REQUIRES, MODIFIES, EFFECTS)
+
+Il prof li usa su **ogni classe e metodo pubblico**. Sono la "documentazione formale" del codice.
+
+#### OVERVIEW -- sulla classe
+```java
+abstract public class Evento implements Comparable<Evento> {
+//OVERVIEW: modella un Evento delle olimpiadi invernali (immutabile)
+```
+- Si scrive subito dopo la dichiarazione della classe
+- Dice **cosa rappresenta** la classe e se e' mutabile o immutabile
+
+#### REQUIRES -- precondizioni (facoltativo)
+```java
+public void aggiungi(int giorno, Evento e) throws GiornoException {
+//REQUIRES: giorno >= 1 && giorno <= 19, e != null
+```
+- Condizioni che DEVONO essere vere **prima** di chiamare il metodo
+- Se non sono vere, il comportamento e' indefinito
+- Se il metodo valida tutto con eccezioni, REQUIRES puo' non servire
+
+#### MODIFIES -- cosa viene modificato
+```java
+public void aggiungi(int giorno, Evento e) throws GiornoException {
+//MODIFIES: this
+```
+- Elenca gli oggetti che il metodo **modifica**
+- Se il metodo non modifica nulla (e' una query), non si mette
+- Tipico: `this` per metodi che cambiano lo stato dell'oggetto
+
+#### EFFECTS -- cosa fa il metodo
+```java
+public void aggiungi(int giorno, Evento e) throws GiornoException {
+//MODIFIES: this
+//EFFECTS: aggiunge l'evento e al giorno specificato
+//         se giorno non valido o gia' occupato lancia GiornoException
+//         se evento gia' presente lancia EventoException
+```
+- Descrive il **comportamento** del metodo
+- Include i casi di eccezione (quando e quale eccezione viene lanciata)
+- E' la parte piu' importante: spiega COSA fa, non COME lo fa
+
+#### Esempio completo su un costruttore
+```java
+public Evento(String nome) throws IllegalArgumentException {
+//MODIFIES: this
+//EFFECTS: inizializza this con nome evento
+//         se nome null o vuoto lancia IllegalArgumentException
+    if(nome == null || nome.equals(""))
+        throw new IllegalArgumentException("\tECCEZIONE: nome null o vuoto");
+    this.nome = nome;
+}
+```
+
+#### Esempio completo su un metodo
+```java
+public void rimuovi(int giorno) throws GiornoException {
+//MODIFIES: this
+//EFFECTS: rimuove l'evento al giorno specificato
+//         se giorno non valido o vuoto lancia GiornoException
+    if(giorno < 1 || giorno > 19)
+        throw new GiornoException("\tECCEZIONE: giorno non valido");
+    if(eventi[giorno - 1] == null)
+        throw new GiornoException("\tECCEZIONE: nessun evento al giorno");
+    eventi[giorno - 1] = null;
+}
+```
+
 ### Esempi dei metodi principali
 
 #### `compareTo` -- definisce l'ordine naturale
+
 ```java
 // Nella classe padre (es. Evento):
 @Override
@@ -359,6 +428,7 @@ a.compareTo(a);  // zero     -> uguali
 ```
 
 #### `equals` -- confronto per uguaglianza logica
+
 ```java
 // Nella classe padre (es. Evento):
 @Override
@@ -378,6 +448,7 @@ a.equals("ciao"); // false -> non e' un Evento
 ```
 
 #### `hashCode` -- codice numerico dell'oggetto
+
 ```java
 // Nella classe padre (es. Evento):
 @Override
@@ -392,6 +463,7 @@ a.hashCode();  // restituisce un int (es. 123456)
 ```
 
 #### `iterator` -- scorre la collezione in ordine
+
 ```java
 // Nel contenitore (es. Olimpiade):
 @Override
@@ -417,6 +489,7 @@ for (Evento e : olimpiade) {     // chiama iterator() automaticamente
 ```
 
 #### `hasNext` e `next` -- metodi dell'Iterator
+
 ```java
 // hasNext() -> restituisce true se ci sono ancora elementi
 // next()    -> restituisce il prossimo elemento e avanza
@@ -431,6 +504,7 @@ it.hasNext();  // false (se non ce ne sono piu')
 ```
 
 #### `toString` -- rappresentazione testuale
+
 ```java
 // Nella classe padre:
 @Override
@@ -451,6 +525,7 @@ String s = "Evento: " + evento;  // chiama toString() automaticamente
 ```
 
 #### `Collections.sort` -- ordina una lista
+
 ```java
 List<Evento> lista = new ArrayList<>();
 lista.add(new Gara("Sci", 15));        // durata 75
@@ -462,6 +537,7 @@ Collections.sort(lista);  // ordina usando compareTo
 ```
 
 #### `instanceof` -- controlla il tipo
+
 ```java
 Evento e = new Gara("Sci", 15);
 e instanceof Evento;  // true  (Gara E' un Evento)
