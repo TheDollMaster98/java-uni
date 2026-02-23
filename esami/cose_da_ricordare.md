@@ -556,6 +556,274 @@ if(evento instanceof Cerimonia) {
 
 ---
 
+## TEORIA: Memoria in Java (Stack e Heap)
+
+### Come Java gestisce la RAM
+
+Java divide la memoria in due zone principali:
+
+```
+STACK (pila)                          HEAP (mucchio)
++-----------------+                   +---------------------------+
+| main()          |                   |                           |
+|   anno = 2026   |                   |  [Olimpiade oggetto]      |
+|   olimpiade ----+------------------>|    anno: 2026             |
+|                 |                   |    eventi: [null,null,...]|
+|   evento -------+----------+       |                           |
++-----------------+           |       |  [Gara oggetto]           |
+                              +------>|    nome: "Sci"            |
+                                      |    numAtleti: 15          |
+                                      |                           |
+                                      |  "Sci" (String)           |
+                                      +---------------------------+
+```
+
+#### Stack (pila)
+- Contiene le **variabili locali** e i **parametri** dei metodi
+- Ogni chiamata a metodo crea un nuovo "frame" sullo stack
+- Quando il metodo finisce, il frame viene rimosso (la memoria si libera)
+- I **tipi primitivi** (`int`, `double`, `boolean`) sono salvati **direttamente** nello stack
+- I **riferimenti** agli oggetti sono salvati nello stack, ma puntano all'heap
+
+#### Heap (mucchio)
+- Contiene **tutti gli oggetti** creati con `new`
+- Gli oggetti restano nell'heap finche' qualcuno li referenzia
+- Quando nessuna variabile punta piu' a un oggetto, il **Garbage Collector** lo elimina automaticamente
+- Anche gli **array** e le **String** sono oggetti nell'heap
+
+#### Tipi primitivi vs Oggetti
+
+| | Primitivi | Oggetti |
+|--|-----------|---------|
+| Dove | Stack (valore diretto) | Heap (stack ha il riferimento) |
+| Esempi | `int`, `double`, `boolean`, `char` | `String`, `Evento`, `int[]`, `ArrayList` |
+| Confronto | `==` confronta il **valore** | `==` confronta il **riferimento** (indirizzo), `equals` confronta il **contenuto** |
+| Default | `0`, `0.0`, `false` | `null` |
+
+```java
+int a = 5;
+int b = 5;
+a == b;  // true (confronta i valori, entrambi 5)
+
+Evento e1 = new Gara("Sci", 15);
+Evento e2 = new Gara("Sci", 15);
+e1 == e2;      // FALSE! sono due oggetti diversi in memoria
+e1.equals(e2); // true (se equals confronta per nome)
+```
+
+#### `new` = crea un oggetto nell'heap
+```java
+Evento e = new Gara("Sci", 15);
+```
+1. `new Gara(...)` crea un oggetto Gara nell'**heap**
+2. Il costruttore inizializza i campi dell'oggetto
+3. Il riferimento (indirizzo in memoria) viene salvato nella variabile `e` nello **stack**
+4. `e` non CONTIENE l'oggetto, PUNTA all'oggetto
+
+#### `null` = riferimento che non punta a niente
+```java
+Evento e = null;   // e non punta a nessun oggetto
+e.durata();        // ERRORE! NullPointerException
+```
+
+#### Garbage Collector
+```java
+Evento e = new Gara("Sci", 15);  // oggetto creato nell'heap
+e = new Gara("Bob", 10);         // e ora punta a un NUOVO oggetto
+// il vecchio oggetto "Sci" non ha piu' riferimenti
+// il Garbage Collector lo eliminera' automaticamente
+```
+- Non devi mai liberare la memoria manualmente (a differenza di C/C++)
+- Java lo fa automaticamente quando un oggetto non e' piu' raggiungibile
+
+---
+
+## TEORIA: Gerarchia dei tipi e sottotipi (≺)
+
+### Il simbolo ≺ (sottotipo)
+
+`A ≺ B` si legge "A e' sottotipo di B" (A extends B).
+
+```
+        Object          <-- tutto e' sottotipo di Object
+       /      \
+    Animal    Plant
+   /  |  \
+ Dog Turtle Pellican
+```
+
+#### Proprieta' transitiva
+Se `A ≺ B` e `B ≺ C`, allora `A ≺ C`.
+
+```java
+// Dog extends Animal, Animal extends Object
+// Quindi: Dog ≺ Animal ≺ Object
+// Per transitivita': Dog ≺ Object
+
+Object o = new Dog();  // OK! Dog e' sottotipo di Object
+```
+
+Nell'esame:
+```java
+// Gara extends Evento, Evento extends Object
+// Gara ≺ Evento ≺ Object
+// Per transitivita': Gara ≺ Object
+
+Evento e = new Gara("Sci", 15);  // OK! Gara ≺ Evento
+Object o = new Gara("Sci", 15);  // OK! Gara ≺ Object (transitivita')
+```
+
+### Tipo Apparente vs Tipo Concreto
+
+```java
+Evento e = new Gara("Sci", 15);
+//  ^                ^
+//  |                |
+//  Tipo APPARENTE   Tipo CONCRETO
+//  (dichiarato)     (effettivo, creato con new)
+```
+
+- **Tipo Apparente** = il tipo della variabile (quello scritto a sinistra). Determina **quali metodi puoi chiamare**.
+- **Tipo Concreto** = il tipo reale dell'oggetto (quello dopo `new`). Determina **quale implementazione viene eseguita**.
+
+```java
+Evento e = new Gara("Sci", 15);
+
+e.durata();    // OK - durata() e' definito in Evento (tipo apparente)
+               // Ma viene eseguito il durata() di GARA (tipo concreto)
+
+e.numAtleti;   // ERRORE! numAtleti non esiste in Evento (tipo apparente)
+               // Anche se l'oggetto e' una Gara, il compilatore vede solo Evento
+```
+
+### Principio di Sostituzione di Liskov (LSP)
+
+> A una variabile di tipo B si puo' assegnare un valore di tipo A se A ≺ B.
+
+```java
+Evento e;                          // Tipo apparente: Evento
+
+e = new Gara("Sci", 15);          // OK: Gara ≺ Evento
+e = new Cerimonia("Ape", true);   // OK: Cerimonia ≺ Evento
+e = new Evento("Test");           // ERRORE: Evento e' abstract, non si puo' istanziare
+```
+
+Funziona anche con parametri di metodi:
+```java
+public void aggiungi(int giorno, Evento e) { ... }
+
+// Posso passare qualsiasi sottotipo di Evento:
+aggiungi(1, new Cerimonia("Ape", true));  // Cerimonia ≺ Evento
+aggiungi(2, new Gara("Sci", 15));         // Gara ≺ Evento
+```
+
+E con array/collezioni:
+```java
+Evento[] eventi = new Evento[19];
+eventi[0] = new Cerimonia("Ape", true);  // OK
+eventi[1] = new Gara("Sci", 15);         // OK
+// L'array contiene oggetti di tipo diverso ma tutti ≺ Evento
+```
+
+---
+
+## TEORIA: Mutabile vs Immutabile
+
+### Quando un oggetto e' immutabile?
+
+Un oggetto e' **immutabile** se, una volta creato, il suo stato non puo' cambiare.
+
+| | Mutabile | Immutabile |
+|--|----------|------------|
+| Campi | `private` (senza `final`) | `private final` |
+| Ha setter? | Si (`setX`, `setY`) | No |
+| Ha mutators? | Si (metodi che cambiano lo stato) | No |
+| OVERVIEW dice | "mutabile" | "immutabile" |
+| Esempio | `ArrayList`, `StringBuilder` | `String`, `Integer` |
+
+```java
+// IMMUTABILE - una volta creato, non cambia
+public class Punto {
+//OVERVIEW: modella un punto immutabile
+    private final double x;  // final = non cambia
+    private final double y;
+    // Solo getter, niente setter
+}
+
+// MUTABILE - puo' cambiare dopo la creazione
+public class Punto {
+//OVERVIEW: modella un punto mutabile
+    private double x;       // senza final = puo' cambiare
+    private double y;
+    // Ha getter E setter
+    public void setX(double x) { this.x = x; }
+}
+```
+
+Nell'esame: le classi padre (Evento, Sorpresa) sono quasi sempre **immutabili** (tutti i campi `final`). Il contenitore (Olimpiade, Calendario) e' **mutabile** (aggiungi/rimuovi cambiano lo stato).
+
+---
+
+## TEORIA: Categorie di metodi
+
+I metodi di istanza si dividono in 4 categorie:
+
+| Categoria | Cosa fa | Esempio | Ha MODIFIES? |
+|-----------|---------|---------|-------------|
+| **Creator** (costruttore) | Crea un nuovo oggetto | `new Gara("Sci", 15)` | Si (`this`) |
+| **Observer** (osservatore) | Restituisce info sullo stato | `e.durata()`, `e.getNome()` | No |
+| **Mutator** (mutatore) | Cambia lo stato dell'oggetto | `olimpiade.aggiungi(...)` | Si (`this`) |
+| **Producer** (produttore) | Restituisce un nuovo oggetto dello stesso tipo | `punto.copia()` | No |
+
+```java
+// CREATOR
+public Gara(String nome, int numAtleti) { ... }
+
+// OBSERVER - legge senza modificare
+public int durata() { return numAtleti * 5; }
+public String getNome() { return nome; }
+
+// MUTATOR - modifica this
+public void aggiungi(int giorno, Evento e) {
+    // cambia lo stato dell'oggetto
+    eventi[giorno - 1] = e;
+}
+
+// PRODUCER - crea e restituisce un nuovo oggetto
+public Punto copia() {
+    return new Punto(this.x, this.y);
+}
+```
+
+---
+
+## TEORIA: Encapsulation (incapsulamento)
+
+Non esporre mai la rappresentazione interna di un oggetto.
+
+```java
+// SBAGLIATO - chiunque puo' modificare gli attributi
+public class Studente {
+    public String nome;         // accessibile da fuori!
+    public int matricola;       // accessibile da fuori!
+}
+// Problemi: studente.nome = null;  -> stato invalido!
+
+// GIUSTO - attributi privati, accesso tramite metodi
+public class Studente {
+    private final String nome;
+    private final int matricola;
+
+    public String getNome() { return nome; }
+    public int getMatricola() { return matricola; }
+}
+// I metodi controllano cosa si puo' fare -> stato sempre valido
+```
+
+**NB**: il prof nell'esame usa `final public` (non private) per i campi immutabili. Questo e' un compromesso: il campo e' accessibile ma non modificabile (`final`). E' accettabile per l'esame, ma in generale `private final` e' piu' sicuro.
+
+---
+
 ## ERRORI FREQUENTI DA EVITARE
 
 1. **Salvare nel padre dati che variano per sottoclasse** -> usa metodo astratto
