@@ -9,6 +9,9 @@ public abstract class Evento implements Comparable<Evento> {
     private final String nome;
     private final int durata;
 
+    // dovevo farlo così:
+    // abstract public int durata();
+
     protected Evento(String nome, int durata) {
         this.nome = nome;
         this.durata = durata;
