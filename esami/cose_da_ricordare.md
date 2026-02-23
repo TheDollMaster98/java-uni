@@ -824,6 +824,180 @@ public class Studente {
 
 ---
 
+## TEORIA: AF (Funzione di Astrazione), RI (Invariante di Rappresentazione) e repOk()
+
+### Cosa sono AF e RI?
+
+Ogni classe ha due livelli:
+- **Rappresentazione concreta** (C): come i dati sono salvati in memoria (campi, array, variabili)
+- **Oggetto astratto** (A): cosa l'oggetto **rappresenta** concettualmente per chi lo usa
+
+```
+Rappresentazione (C)              Oggetto Astratto (A)
++-------------------+             +-------------------+
+| eventi = [Sci,    |    AF       |                   |
+|   null, Bob,      | -------->   |  { Sci, Bob }     |
+|   null, null]     |             |                   |
+| anno = 2026       |             | Olimpiade 2026    |
++-------------------+             +-------------------+
+```
+
+#### AF: Funzione di Astrazione (C -> A)
+
+- **Mappa** la rappresentazione concreta all'oggetto astratto
+- Risponde alla domanda: "cosa rappresenta questo stato concreto?"
+- Piu' rappresentazioni concrete possono mappare allo stesso oggetto astratto
+- In Java si implementa come **`toString()`**
+
+```java
+// Esempio: IntSet (insieme di interi)
+// Rappresentazione: array di int
+
+// [1, 2, 3] -> AF -> {1, 2, 3}
+// [3, 1, 2] -> AF -> {1, 2, 3}   // STESSO oggetto astratto!
+// [2, 1, 3] -> AF -> {1, 2, 3}   // STESSO oggetto astratto!
+// L'ordine nell'array non conta, l'insieme e' lo stesso
+```
+
+```java
+// Nell'esame (Olimpiade):
+// AF(eventi, anno) = "le olimpiadi invernali dell'anno 'anno'
+//                     con gli eventi in 'eventi'"
+```
+
+#### RI: Invariante di Rappresentazione (C -> {true, false})
+
+- Condizioni che **DEVONO sempre essere vere** sulla rappresentazione
+- Se RI e' false, l'oggetto e' in uno stato **invalido/corrotto**
+- In Java si implementa come **`repOk()`**
+
+```java
+// Esempio: IntSet (insieme = niente duplicati)
+// RI: nessun duplicato nell'array, array != null
+
+// [1, 2, 3] -> RI -> true   (nessun duplicato, OK)
+// [3, 4, 3] -> RI -> FALSE  (duplicato! stato invalido)
+// null       -> RI -> FALSE  (array null! stato invalido)
+```
+
+### repOk() -- verifica l'invariante di rappresentazione
+
+```java
+public boolean repOk() {
+    // Controlla TUTTE le condizioni dell'RI
+    // Restituisce true se l'oggetto e' in uno stato valido
+    // Restituisce false se qualcosa e' sbagliato
+}
+```
+
+#### Esempio: IntSet
+
+```java
+public class IntSet {
+//OVERVIEW: insieme di interi senza duplicati (mutabile)
+    private int[] elementi;
+    private int size;
+
+    // RI: elementi != null, size >= 0, size <= elementi.length,
+    //     nessun duplicato in elementi[0..size-1]
+
+    public boolean repOk() {
+        if (elementi == null) return false;
+        if (size < 0 || size > elementi.length) return false;
+        // Controlla duplicati
+        for (int i = 0; i < size; i++)
+            for (int j = i + 1; j < size; j++)
+                if (elementi[i] == elementi[j]) return false;
+        return true;
+    }
+}
+```
+
+#### Esempio: Olimpiade (per l'esame)
+
+```java
+public class Olimpiade implements Iterable<Evento> {
+    private final Evento[] eventi;
+    private final int anno;
+
+    // RI: eventi != null, anno > 0,
+    //     nessun duplicato in eventi (controllato con equals),
+    //     al massimo una cerimonia di apertura e una di chiusura
+
+    public boolean repOk() {
+        if (eventi == null) return false;
+        if (anno <= 0) return false;
+        // Controlla duplicati
+        for (int i = 0; i < eventi.length; i++) {
+            if (eventi[i] == null) continue;
+            for (int j = i + 1; j < eventi.length; j++) {
+                if (eventi[j] == null) continue;
+                if (eventi[i].equals(eventi[j])) return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### Quando RI deve essere vero?
+
+RI deve essere vero in **4 momenti** (verifica per induzione):
+
+| Momento | Cosa succede | Esempio |
+|---------|-------------|---------|
+| **Dopo il costruttore** | L'oggetto appena creato deve essere valido | `new Olimpiade(2026)` -> RI true |
+| **Dopo ogni mutator** | Aggiungi/rimuovi non devono corrompere lo stato | `aggiungi(1, evento)` -> RI true |
+| **Dopo ogni producer** | Un nuovo oggetto creato da un altro deve essere valido | `copia()` -> RI true |
+| **Gli observer non modificano** | Non cambiano lo stato, quindi RI resta vero | `getDurata()` -> RI non cambia |
+
+```
+Costruttore -> RI true ─┐
+                         ├──> RI SEMPRE true durante tutta la vita dell'oggetto
+Mutator -> RI true ──────┤
+                         │
+Producer -> RI true ─────┘
+```
+
+### assert repOk() -- verifica automatica durante il debug
+
+`assert` e' un controllo che verifica una condizione durante l'esecuzione. Se la condizione e' false, il programma si ferma con un errore.
+
+```java
+public class Olimpiade {
+    public Olimpiade(int anno) {
+        // ... inizializzazione ...
+        assert repOk();  // controlla che l'oggetto sia valido dopo la creazione
+    }
+
+    public void aggiungi(int giorno, Evento e) throws GiornoException {
+        // ... logica di aggiunta ...
+        assert repOk();  // controlla che l'oggetto sia ancora valido dopo la modifica
+    }
+
+    public void rimuovi(int giorno) throws GiornoException {
+        // ... logica di rimozione ...
+        assert repOk();  // controlla dopo la rimozione
+    }
+}
+```
+
+- `assert` e' **disattivato** di default in Java
+- Per attivarlo: `java -ea NomeClasse` (`-ea` = enable assertions)
+- Si usa **solo durante lo sviluppo/debug**, NON in produzione
+- Se `repOk()` restituisce false, il programma lancia `AssertionError`
+
+### Riepilogo AF vs RI vs repOk
+
+| | AF | RI | repOk() |
+|--|----|----|---------|
+| **Cosa fa** | Mappa rappresentazione -> astrazione | Definisce quando la rappresentazione e' valida | Implementa il controllo dell'RI in codice |
+| **Domanda** | "Cosa rappresenta questo stato?" | "Questo stato e' valido?" | "I campi dell'oggetto rispettano le regole?" |
+| **In Java** | `toString()` | Commento `// RI: ...` | `public boolean repOk()` |
+| **Tipo** | Funzione C -> A | Predicato C -> {true, false} | Metodo che restituisce boolean |
+
+---
+
 ## ERRORI FREQUENTI DA EVITARE
 
 1. **Salvare nel padre dati che variano per sottoclasse** -> usa metodo astratto
