@@ -408,150 +408,218 @@ public void rimuovi(int giorno) throws GiornoException {
 }
 ```
 
-### Esempi dei metodi principali
+### Metodi da implementare per interfaccia (stile prof, generico)
 
-#### `compareTo` -- definisce l'ordine naturale
+---
 
-```java
-// Nella classe padre (es. Evento):
-@Override
-public int compareTo(Evento e) {
-    return Integer.compare(this.durata(), e.durata());
-}
+### `Comparable<Padre>` -- nel PADRE (classe astratta)
 
-// Uso:
-Evento a = new Gara("Sci", 15);     // durata 75
-Evento b = new Cerimonia("Ape", true); // durata 60
-a.compareTo(b);  // positivo -> a > b (75 > 60)
-b.compareTo(a);  // negativo -> b < a (60 < 75)
-a.compareTo(a);  // zero     -> uguali
-```
-
-#### `equals` -- confronto per uguaglianza logica
+Implementa: `equals`, `hashCode`, `compareTo`
 
 ```java
-// Nella classe padre (es. Evento):
-@Override
-public boolean equals(Object o) {
-    if(o == null) return false;
-    if(o == this) return true;
-    if(!(o instanceof Evento)) return false;
-    return ((Evento) o).nome.equals(this.nome);
-}
+abstract public class Padre implements Comparable<Padre> {
+    final public String nome;  // campo usato per equals
 
-// Uso:
-Evento a = new Gara("Sci", 15);
-Evento b = new Cerimonia("Sci", true);
-a.equals(b);  // true  -> stesso nome "Sci", anche se tipi diversi
-a.equals(null); // false
-a.equals("ciao"); // false -> non e' un Evento
-```
+    // --- equals: confronto logico ---
+    // Regola: due oggetti sono "uguali" se hanno lo stesso campo chiave
+    @Override
+    public boolean equals(Object o) {
+        if(o == null) return false;        // null -> false
+        if(o == this) return true;         // stesso riferimento -> true
+        if(!(o instanceof Padre))          // tipo diverso -> false
+            return false;
+        return ((Padre) o).nome.equals(this.nome);  // confronto sul campo chiave
+    }
 
-#### `hashCode` -- codice numerico dell'oggetto
+    // --- hashCode: DEVE essere coerente con equals ---
+    // Regola: se a.equals(b) == true, allora a.hashCode() == b.hashCode()
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(getClass(), nome);
+        //                           ^^^^^^^^^   ^^^^
+        //                  tipo concreto    campo usato in equals
+    }
 
-```java
-// Nella classe padre (es. Evento):
-@Override
-public int hashCode() {
-    return java.util.Objects.hash(getClass(), nome);
-}
+    // --- compareTo: definisce l'ordine naturale ---
+    // Regola: negativo = this < o, zero = this == o, positivo = this > o
+    @Override
+    public int compareTo(Padre o) {
+        return Integer.compare(this.valore(), o.valore());
+        //     ^^^^^^^^^^^^^^^
+        //     MAI usare this.x - o.x (rischio overflow)
+    }
 
-// Uso (dietro le quinte in HashMap/HashSet):
-Evento a = new Gara("Sci", 15);
-a.hashCode();  // restituisce un int (es. 123456)
-// Regola: se a.equals(b) e' true, allora a.hashCode() == b.hashCode()
-```
-
-#### `iterator` -- scorre la collezione in ordine
-
-```java
-// Nel contenitore (es. Olimpiade):
-@Override
-public Iterator<Evento> iterator() {
-    List<Evento> lista = new ArrayList<>();
-    for (Evento e : eventi)
-        if (e != null) lista.add(e);
-    Collections.sort(lista);  // usa compareTo
-    return lista.iterator();
-}
-
-// Uso esplicito (raro, di solito usi for-each):
-Iterator<Evento> it = olimpiade.iterator();
-while (it.hasNext()) {           // c'e' un prossimo elemento?
-    Evento e = it.next();        // dammi il prossimo elemento
-    System.out.println(e);
-}
-
-// Uso con for-each (comune, fa la stessa cosa):
-for (Evento e : olimpiade) {     // chiama iterator() automaticamente
-    System.out.println(e);
+    public abstract int valore();  // metodo su cui si ordina
 }
 ```
 
-#### `hasNext` e `next` -- metodi dell'Iterator
+---
+
+### `Iterable<Padre>` -- nel CONTENITORE (classe mutabile)
+
+Implementa: `iterator()` (che dentro ha `hasNext`, `next`), `repOk()`
 
 ```java
-// hasNext() -> restituisce true se ci sono ancora elementi
-// next()    -> restituisce il prossimo elemento e avanza
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
-Iterator<Evento> it = olimpiade.iterator();
-it.hasNext();  // true (se c'e' almeno un elemento)
-it.next();     // restituisce il PRIMO elemento
-it.hasNext();  // true (se ce ne sono altri)
-it.next();     // restituisce il SECONDO elemento
-it.hasNext();  // false (se non ce ne sono piu')
-// it.next();  // ERRORE! NoSuchElementException
+public class Contenitore implements Iterable<Padre> {
+//OVERVIEW: modella un contenitore di elementi Padre (mutable)
+
+    private HashMap<Integer, Padre> mappa = new HashMap<>();
+
+    // --- iterator: restituisce gli elementi in ordine (compareTo) ---
+    @Override
+    public Iterator<Padre> iterator() {
+
+        ArrayList<Padre> a = new ArrayList<>(mappa.values());
+        //                                   ^^^^^^^^^^^^^
+        //                   prende tutti i valori dalla mappa
+
+        a.sort(null);
+        // ^^^^^^^^^^
+        // ordina usando compareTo (null = ordine naturale)
+
+        return new Iterator<Padre>() {
+        //     ^^^^^^^^^^^^^^^^^^^^^^
+        //     classe anonima che implementa Iterator
+
+            Iterator<Padre> i = a.iterator();
+            //                  ^^^^^^^^^^^^
+            //     iteratore interno sulla lista ordinata
+
+            @Override
+            public boolean hasNext() {
+                return i.hasNext();
+                // true se ci sono ancora elementi da scorrere
+            }
+
+            @Override
+            public Padre next() {
+                return i.next();
+                // restituisce il prossimo elemento e avanza
+            }
+        };
+    }
+
+    // --- repOk: verifica che la rappresentazione sia valida ---
+    public boolean repOk() {
+        ArrayList<Padre> el = new ArrayList<Padre>(mappa.values());
+
+        for(int chiave : mappa.keySet()) {
+        //                ^^^^^^^^^^^^^^
+        //   keySet() = tutte le chiavi della mappa (Set<Integer>)
+
+            if(chiave <= 0 || chiave > MAX)
+                return false;  // chiave fuori range
+
+            Padre p = mappa.get(chiave);
+
+            if(p == null || el.indexOf(p) != el.lastIndexOf(p))
+                return false;
+            //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            //  indexOf != lastIndexOf = duplicato! (compare con equals)
+
+            // Vincoli specifici su sottotipi:
+            if(p instanceof SottoClasse)
+                if( /* condizione violata */ )
+                    return false;
+        }
+
+        return true;  // tutto valido
+    }
+}
 ```
 
-#### `toString` -- rappresentazione testuale
+#### Come si usa l'iterator (chi lo chiama):
 
 ```java
-// Nella classe padre:
+// Modo 1: for-each (il piu' comune) -- chiama iterator() automaticamente
+for(Padre p : contenitore) {
+    System.out.println("\t" + p);
+}
+
+// Modo 2: esplicito (raro)
+Iterator<Padre> it = contenitore.iterator();
+while(it.hasNext()) {         // c'e' un prossimo?
+    Padre p = it.next();      // dammi il prossimo
+    System.out.println(p);
+}
+```
+
+---
+
+### Metodi utili di `HashMap` (usati dal prof)
+
+```java
+HashMap<Integer, Padre> mappa = new HashMap<>();
+
+mappa.put(chiave, valore);       // inserisci coppia
+mappa.get(chiave);               // ottieni valore dalla chiave (null se non esiste)
+mappa.remove(chiave);            // rimuovi coppia
+mappa.containsKey(chiave);       // chiave esiste? -> boolean
+mappa.values();                  // tutti i valori -> Collection<Padre>
+mappa.values().contains(p);      // un valore esiste? (usa equals) -> boolean
+mappa.keySet();                  // tutte le chiavi -> Set<Integer>
+```
+
+---
+
+### `toString` -- rappresentazione testuale (AF)
+
+```java
+// Nel PADRE:
 @Override
 public String toString() {
-    return " nome: " + nome + " durata: " + durata();
+    return " nome: " + nome + " valore: " + valore();
 }
 
-// Nella sottoclasse:
+// Nella SOTTOCLASSE:
 @Override
 public String toString() {
-    return "Gara" + super.toString() + " con " + numAtleti + " atleti";
+    return "Figlio" + super.toString() + " con " + campoExtra;
+    //                ^^^^^^^^^^^^^^^
+    //    chiama il toString() del padre -> riuso del codice
 }
-// Risultato: "Gara nome: Sci durata: 75 con 15 atleti"
 
-// Uso:
-System.out.println(evento);  // chiama toString() automaticamente
-String s = "Evento: " + evento;  // chiama toString() automaticamente
+// Nel CONTENITORE:
+@Override
+public String toString() {
+    String ret = "Contenitore:\n";
+    for(int chiave : mappa.keySet())       // scorre le chiavi ordinate? no, HashMap non ordina
+        if(mappa.get(chiave) != null)
+            ret += "\t" + chiave + ": " + mappa.get(chiave) + "\n";
+    return ret;
+}
+
+// Uso (automatico):
+System.out.println(oggetto);        // chiama toString()
+String s = "Info: " + oggetto;      // chiama toString()
 ```
 
-#### `Collections.sort` -- ordina una lista
+---
+
+### `instanceof` -- controlla il tipo concreto
 
 ```java
-List<Evento> lista = new ArrayList<>();
-lista.add(new Gara("Sci", 15));        // durata 75
-lista.add(new Cerimonia("Ape", true)); // durata 60
-lista.add(new Gara("Bob", 10));        // durata 60
+Padre p = new Figlio("nome", 10);
+p instanceof Padre;    // true  (Figlio E' un Padre)
+p instanceof Figlio;   // true  (e' proprio un Figlio)
+p instanceof Fratello; // false (non e' un Fratello)
+p instanceof Object;   // true  (tutto e' Object)
 
-Collections.sort(lista);  // ordina usando compareTo
-// Risultato: [Cerimonia(60), Gara Bob(60), Gara Sci(75)]
-```
+// Uso in equals:
+if(!(o instanceof Padre)) return false;
 
-#### `instanceof` -- controlla il tipo
-
-```java
-Evento e = new Gara("Sci", 15);
-e instanceof Evento;  // true  (Gara E' un Evento)
-e instanceof Gara;    // true  (e' proprio una Gara)
-e instanceof Cerimonia; // false (non e' una Cerimonia)
-e instanceof Object;  // true  (tutto e' Object in Java)
-
-// Uso tipico in equals:
-if(!(o instanceof Evento)) return false;
-// Uso tipico in aggiungi per vincoli speciali:
-if(evento instanceof Cerimonia) {
-    Cerimonia c = (Cerimonia) evento;  // cast per accedere ai campi di Cerimonia
-    if(c.isApertura() && giorno != 1) throw new GiornoException("...");
-}
+// Uso in aggiungi (vincoli su sottotipi):
+if(e.getClass().equals(SottoClasse.class))     // tipo ESATTO (no sottotipi)
+    if(((SottoClasse) e).campo && chiave != 1)
+        throw new MiaException("...");
+// OPPURE:
+if(e instanceof SottoClasse)                   // tipo O sottotipi
+    if(((SottoClasse) e).campo && chiave != 1)
+        throw new MiaException("...");
 ```
 
 ---
