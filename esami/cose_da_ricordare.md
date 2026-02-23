@@ -339,6 +339,7 @@ public class Test {
 | `Iterator`       | Oggetto che scorre una collezione. Ha `hasNext()` e `next()`.                 |
 | `throws`         | Dichiara che un metodo PUO' lanciare un'eccezione (obbligatorio per checked). |
 | `throw`          | Lancia effettivamente un'eccezione: `throw new MiaException("msg")`.          |
+| `\t`             | Carattere TAB: aggiunge una tabulazione nell'output (indentazione).            |
 
 ### Commenti di specifica (OVERVIEW, REQUIRES, MODIFIES, EFFECTS)
 
