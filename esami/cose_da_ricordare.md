@@ -339,39 +339,46 @@ public class Test {
 | `Iterator`       | Oggetto che scorre una collezione. Ha `hasNext()` e `next()`.                 |
 | `throws`         | Dichiara che un metodo PUO' lanciare un'eccezione (obbligatorio per checked). |
 | `throw`          | Lancia effettivamente un'eccezione: `throw new MiaException("msg")`.          |
-| `\t`             | Carattere TAB: aggiunge una tabulazione nell'output (indentazione).            |
+| `\t`             | Carattere TAB: aggiunge una tabulazione nell'output (indentazione).           |
 
 ### Commenti di specifica (OVERVIEW, REQUIRES, MODIFIES, EFFECTS)
 
 Il prof li usa su **ogni classe e metodo pubblico**. Sono la "documentazione formale" del codice.
 
 #### OVERVIEW -- sulla classe
+
 ```java
 abstract public class Evento implements Comparable<Evento> {
 //OVERVIEW: modella un Evento delle olimpiadi invernali (immutabile)
 ```
+
 - Si scrive subito dopo la dichiarazione della classe
 - Dice **cosa rappresenta** la classe e se e' mutabile o immutabile
 
 #### REQUIRES -- precondizioni (facoltativo)
+
 ```java
 public void aggiungi(int giorno, Evento e) throws GiornoException {
 //REQUIRES: giorno >= 1 && giorno <= 19, e != null
 ```
+
 - Condizioni che DEVONO essere vere **prima** di chiamare il metodo
 - Se non sono vere, il comportamento e' indefinito
 - Se il metodo valida tutto con eccezioni, REQUIRES puo' non servire
 
 #### MODIFIES -- cosa viene modificato
+
 ```java
 public void aggiungi(int giorno, Evento e) throws GiornoException {
 //MODIFIES: this
 ```
+
 - Elenca gli oggetti che il metodo **modifica**
 - Se il metodo non modifica nulla (e' una query), non si mette
 - Tipico: `this` per metodi che cambiano lo stato dell'oggetto
 
 #### EFFECTS -- cosa fa il metodo
+
 ```java
 public void aggiungi(int giorno, Evento e) throws GiornoException {
 //MODIFIES: this
@@ -379,11 +386,13 @@ public void aggiungi(int giorno, Evento e) throws GiornoException {
 //         se giorno non valido o gia' occupato lancia GiornoException
 //         se evento gia' presente lancia EventoException
 ```
+
 - Descrive il **comportamento** del metodo
 - Include i casi di eccezione (quando e quale eccezione viene lanciata)
 - E' la parte piu' importante: spiega COSA fa, non COME lo fa
 
 #### Esempio completo su un costruttore
+
 ```java
 public Evento(String nome) throws IllegalArgumentException {
 //MODIFIES: this
@@ -396,6 +405,7 @@ public Evento(String nome) throws IllegalArgumentException {
 ```
 
 #### Esempio completo su un metodo
+
 ```java
 public void rimuovi(int giorno) throws GiornoException {
 //MODIFIES: this
@@ -648,6 +658,7 @@ STACK (pila)                          HEAP (mucchio)
 ```
 
 #### Stack (pila)
+
 - Contiene le **variabili locali** e i **parametri** dei metodi
 - Ogni chiamata a metodo crea un nuovo "frame" sullo stack
 - Quando il metodo finisce, il frame viene rimosso (la memoria si libera)
@@ -655,6 +666,7 @@ STACK (pila)                          HEAP (mucchio)
 - I **riferimenti** agli oggetti sono salvati nello stack, ma puntano all'heap
 
 #### Heap (mucchio)
+
 - Contiene **tutti gli oggetti** creati con `new`
 - Gli oggetti restano nell'heap finche' qualcuno li referenzia
 - Quando nessuna variabile punta piu' a un oggetto, il **Garbage Collector** lo elimina automaticamente
@@ -662,12 +674,12 @@ STACK (pila)                          HEAP (mucchio)
 
 #### Tipi primitivi vs Oggetti
 
-| | Primitivi | Oggetti |
-|--|-----------|---------|
-| Dove | Stack (valore diretto) | Heap (stack ha il riferimento) |
-| Esempi | `int`, `double`, `boolean`, `char` | `String`, `Evento`, `int[]`, `ArrayList` |
-| Confronto | `==` confronta il **valore** | `==` confronta il **riferimento** (indirizzo), `equals` confronta il **contenuto** |
-| Default | `0`, `0.0`, `false` | `null` |
+|           | Primitivi                          | Oggetti                                                                            |
+| --------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| Dove      | Stack (valore diretto)             | Heap (stack ha il riferimento)                                                     |
+| Esempi    | `int`, `double`, `boolean`, `char` | `String`, `Evento`, `int[]`, `ArrayList`                                           |
+| Confronto | `==` confronta il **valore**       | `==` confronta il **riferimento** (indirizzo), `equals` confronta il **contenuto** |
+| Default   | `0`, `0.0`, `false`                | `null`                                                                             |
 
 ```java
 int a = 5;
@@ -681,27 +693,32 @@ e1.equals(e2); // true (se equals confronta per nome)
 ```
 
 #### `new` = crea un oggetto nell'heap
+
 ```java
 Evento e = new Gara("Sci", 15);
 ```
+
 1. `new Gara(...)` crea un oggetto Gara nell'**heap**
 2. Il costruttore inizializza i campi dell'oggetto
 3. Il riferimento (indirizzo in memoria) viene salvato nella variabile `e` nello **stack**
 4. `e` non CONTIENE l'oggetto, PUNTA all'oggetto
 
 #### `null` = riferimento che non punta a niente
+
 ```java
 Evento e = null;   // e non punta a nessun oggetto
 e.durata();        // ERRORE! NullPointerException
 ```
 
 #### Garbage Collector
+
 ```java
 Evento e = new Gara("Sci", 15);  // oggetto creato nell'heap
 e = new Gara("Bob", 10);         // e ora punta a un NUOVO oggetto
 // il vecchio oggetto "Sci" non ha piu' riferimenti
 // il Garbage Collector lo eliminera' automaticamente
 ```
+
 - Non devi mai liberare la memoria manualmente (a differenza di C/C++)
 - Java lo fa automaticamente quando un oggetto non e' piu' raggiungibile
 
@@ -722,6 +739,7 @@ e = new Gara("Bob", 10);         // e ora punta a un NUOVO oggetto
 ```
 
 #### Proprieta' transitiva
+
 Se `A ≺ B` e `B ≺ C`, allora `A ≺ C`.
 
 ```java
@@ -733,6 +751,7 @@ Object o = new Dog();  // OK! Dog e' sottotipo di Object
 ```
 
 Nell'esame:
+
 ```java
 // Gara extends Evento, Evento extends Object
 // Gara ≺ Evento ≺ Object
@@ -778,6 +797,7 @@ e = new Evento("Test");           // ERRORE: Evento e' abstract, non si puo' ist
 ```
 
 Funziona anche con parametri di metodi:
+
 ```java
 public void aggiungi(int giorno, Evento e) { ... }
 
@@ -787,6 +807,7 @@ aggiungi(2, new Gara("Sci", 15));         // Gara ≺ Evento
 ```
 
 E con array/collezioni:
+
 ```java
 Evento[] eventi = new Evento[19];
 eventi[0] = new Cerimonia("Ape", true);  // OK
@@ -802,13 +823,13 @@ eventi[1] = new Gara("Sci", 15);         // OK
 
 Un oggetto e' **immutabile** se, una volta creato, il suo stato non puo' cambiare.
 
-| | Mutabile | Immutabile |
-|--|----------|------------|
-| Campi | `private` (senza `final`) | `private final` |
-| Ha setter? | Si (`setX`, `setY`) | No |
-| Ha mutators? | Si (metodi che cambiano lo stato) | No |
-| OVERVIEW dice | "mutabile" | "immutabile" |
-| Esempio | `ArrayList`, `StringBuilder` | `String`, `Integer` |
+|               | Mutabile                          | Immutabile          |
+| ------------- | --------------------------------- | ------------------- |
+| Campi         | `private` (senza `final`)         | `private final`     |
+| Ha setter?    | Si (`setX`, `setY`)               | No                  |
+| Ha mutators?  | Si (metodi che cambiano lo stato) | No                  |
+| OVERVIEW dice | "mutabile"                        | "immutabile"        |
+| Esempio       | `ArrayList`, `StringBuilder`      | `String`, `Integer` |
 
 ```java
 // IMMUTABILE - una volta creato, non cambia
@@ -837,12 +858,12 @@ Nell'esame: le classi padre (Evento, Sorpresa) sono quasi sempre **immutabili** 
 
 I metodi di istanza si dividono in 4 categorie:
 
-| Categoria | Cosa fa | Esempio | Ha MODIFIES? |
-|-----------|---------|---------|-------------|
-| **Creator** (costruttore) | Crea un nuovo oggetto | `new Gara("Sci", 15)` | Si (`this`) |
-| **Observer** (osservatore) | Restituisce info sullo stato | `e.durata()`, `e.getNome()` | No |
-| **Mutator** (mutatore) | Cambia lo stato dell'oggetto | `olimpiade.aggiungi(...)` | Si (`this`) |
-| **Producer** (produttore) | Restituisce un nuovo oggetto dello stesso tipo | `punto.copia()` | No |
+| Categoria                  | Cosa fa                                        | Esempio                     | Ha MODIFIES? |
+| -------------------------- | ---------------------------------------------- | --------------------------- | ------------ |
+| **Creator** (costruttore)  | Crea un nuovo oggetto                          | `new Gara("Sci", 15)`       | Si (`this`)  |
+| **Observer** (osservatore) | Restituisce info sullo stato                   | `e.durata()`, `e.getNome()` | No           |
+| **Mutator** (mutatore)     | Cambia lo stato dell'oggetto                   | `olimpiade.aggiungi(...)`   | Si (`this`)  |
+| **Producer** (produttore)  | Restituisce un nuovo oggetto dello stesso tipo | `punto.copia()`             | No           |
 
 ```java
 // CREATOR
@@ -898,6 +919,7 @@ public class Studente {
 ### Cosa sono AF e RI?
 
 Ogni classe ha due livelli:
+
 - **Rappresentazione concreta** (C): come i dati sono salvati in memoria (campi, array, variabili)
 - **Oggetto astratto** (A): cosa l'oggetto **rappresenta** concettualmente per chi lo usa
 
@@ -1013,12 +1035,12 @@ public class Olimpiade implements Iterable<Evento> {
 
 RI deve essere vero in **4 momenti** (verifica per induzione):
 
-| Momento | Cosa succede | Esempio |
-|---------|-------------|---------|
-| **Dopo il costruttore** | L'oggetto appena creato deve essere valido | `new Olimpiade(2026)` -> RI true |
-| **Dopo ogni mutator** | Aggiungi/rimuovi non devono corrompere lo stato | `aggiungi(1, evento)` -> RI true |
-| **Dopo ogni producer** | Un nuovo oggetto creato da un altro deve essere valido | `copia()` -> RI true |
-| **Gli observer non modificano** | Non cambiano lo stato, quindi RI resta vero | `getDurata()` -> RI non cambia |
+| Momento                         | Cosa succede                                           | Esempio                          |
+| ------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| **Dopo il costruttore**         | L'oggetto appena creato deve essere valido             | `new Olimpiade(2026)` -> RI true |
+| **Dopo ogni mutator**           | Aggiungi/rimuovi non devono corrompere lo stato        | `aggiungi(1, evento)` -> RI true |
+| **Dopo ogni producer**          | Un nuovo oggetto creato da un altro deve essere valido | `copia()` -> RI true             |
+| **Gli observer non modificano** | Non cambiano lo stato, quindi RI resta vero            | `getDurata()` -> RI non cambia   |
 
 ```
 Costruttore -> RI true ─┐
@@ -1058,12 +1080,12 @@ public class Olimpiade {
 
 ### Riepilogo AF vs RI vs repOk
 
-| | AF | RI | repOk() |
-|--|----|----|---------|
-| **Cosa fa** | Mappa rappresentazione -> astrazione | Definisce quando la rappresentazione e' valida | Implementa il controllo dell'RI in codice |
-| **Domanda** | "Cosa rappresenta questo stato?" | "Questo stato e' valido?" | "I campi dell'oggetto rispettano le regole?" |
-| **In Java** | `toString()` | Commento `// RI: ...` | `public boolean repOk()` |
-| **Tipo** | Funzione C -> A | Predicato C -> {true, false} | Metodo che restituisce boolean |
+|             | AF                                   | RI                                             | repOk()                                      |
+| ----------- | ------------------------------------ | ---------------------------------------------- | -------------------------------------------- |
+| **Cosa fa** | Mappa rappresentazione -> astrazione | Definisce quando la rappresentazione e' valida | Implementa il controllo dell'RI in codice    |
+| **Domanda** | "Cosa rappresenta questo stato?"     | "Questo stato e' valido?"                      | "I campi dell'oggetto rispettano le regole?" |
+| **In Java** | `toString()`                         | Commento `// RI: ...`                          | `public boolean repOk()`                     |
+| **Tipo**    | Funzione C -> A                      | Predicato C -> {true, false}                   | Metodo che restituisce boolean               |
 
 ---
 
