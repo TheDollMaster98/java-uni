@@ -460,6 +460,17 @@ public class Persona {
 }
 ```
 
+**Nota:** quando sovrascrivi `equals(Object)` devi sempre sovrascrivere anche `hashCode()` in modo coerente. Usare campi stabili (o rendere la classe immutabile) è importante: se i campi usati in `equals` possono cambiare dopo l'inserimento in una collezione basata su hash, il comportamento di `HashMap`/`HashSet` sarà sbagliato.
+
+Esempio idiomatico alternativo:
+
+```java
+@Override
+public int hashCode() {
+    return java.util.Objects.hash(nome, eta);
+}
+```
+
 ### Creare e usare oggetti
 
 ```java

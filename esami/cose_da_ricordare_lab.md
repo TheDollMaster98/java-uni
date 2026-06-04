@@ -95,6 +95,15 @@ public int hashCode() {
 - `hashCode` deve essere coerente con `equals`.
 - Quando usarli: sempre insieme se la classe deve funzionare bene in `HashMap`, `HashSet` o quando il tema chiede confronto logico tra oggetti.
 
+- Nota importante: quando sovrascrivi `equals(...)` devi sempre sovrascrivere anche `hashCode()` in modo coerente. Usare campi stabili (o rendere la classe immutabile) è fondamentale: se i campi usati in `equals` possono cambiare dopo l'inserimento in una collezione hash, il comportamento di `HashMap`/`HashSet` diventa erratico.
+
+```java
+@Override
+public int hashCode() {
+    return java.util.Objects.hash(nome);
+}
+```
+
 ### `toString`
 
 ```java
