@@ -9,66 +9,66 @@ Copre: fondamenti, OOP, eccezioni (checked/unchecked), classi astratte, interfac
 
 ### PARTE 1 – Fondamenti Java
 
-1. [Struttura di un programma](#1-struttura-di-un-programma)
-2. [Tipi primitivi, wrapper e conversioni](#2-tipi-primitivi-wrapper-e-conversioni)
-3. [Stringhe](#3-stringhe)
-4. [Strutture di controllo](#4-strutture-di-controllo)
-5. [Array](#5-array)
-6. [Metodi e procedure](#6-metodi-e-procedure)
+- [Struttura di un programma](#1-struttura-di-un-programma)
+- [Tipi primitivi, wrapper e conversioni](#2-tipi-primitivi-wrapper-e-conversioni)
+- [Stringhe](#3-stringhe)
+- [Strutture di controllo](#4-strutture-di-controllo)
+- [Array](#5-array)
+- [Metodi e procedure](#6-metodi-e-procedure)
 
 ### PARTE 2 – Programmazione a Oggetti
 
-7. [Classi e oggetti](#7-classi-e-oggetti)
-8. [Ereditarieta' e polimorfismo](#8-ereditarietà-e-polimorfismo)
-9. [Classi astratte](#9-classi-astratte)
-10. [Interfacce](#10-interfacce)
+- [Classi e oggetti](#7-classi-e-oggetti)
+- [Ereditarietà e polimorfismo](#8-ereditarietà-e-polimorfismo)
+- [Classi astratte](#9-classi-astratte)
+- [Interfacce](#10-interfacce)
 
 ### PARTE 3 – Eccezioni (approfondimento)
 
-1. [Che cos'e' un'eccezione](#1-che-cose-uneccezione)
-2. [Gerarchia delle eccezioni](#2-gerarchia-delle-eccezioni)
-3. [Checked vs Unchecked exceptions](#3-checked-vs-unchecked-exceptions)
-4. [try-catch-finally](#4-try-catch-finally)
-5. [try-with-resources](#5-try-with-resources)
-6. [throws nella firma del metodo](#6-throws-nella-firma-del-metodo)
-7. [throw per lanciare un'eccezione](#7-throw-per-lanciare-uneccezione)
-8. [Definire eccezioni personalizzate](#8-definire-eccezioni-personalizzate)
-9. [Eccezioni e override: regole precise](#9-eccezioni-e-override-regole-precise)
-10. [Pattern d'esame: eccezioni](#10-pattern-desame-eccezioni)
+- [Che cos'e' un'eccezione](#1-che-cose-uneccezione)
+- [Gerarchia delle eccezioni](#2-gerarchia-delle-eccezioni)
+- [Checked vs Unchecked exceptions](#3-checked-vs-unchecked-exceptions)
+- [try-catch-finally](#4-try-catch-finally)
+- [try-with-resources](#5-try-with-resources)
+- [throws nella firma del metodo](#6-throws-nella-firma-del-metodo)
+- [throw per lanciare un'eccezione](#7-throw-per-lanciare-uneccezione)
+- [Definire eccezioni personalizzate](#8-definire-eccezioni-personalizzate)
+- [Eccezioni e override: regole precise](#9-eccezioni-e-override-regole-precise)
+- [Pattern d'esame: eccezioni](#10-pattern-desame-eccezioni)
 
 ### PARTE 4 – Collezioni e Iteratori
 
-13. [Collezioni: List, Set, Map](#13-collezioni-list-set-map)
-14. [Comparable e Comparator](#14-comparable-e-comparator)
-15. [Iterable e Iterator](#15-iterable-e-iterator)
+- [Collezioni: List, Set, Map](#13-collezioni-list-set-map)
+- [Comparable e Comparator](#14-comparable-e-comparator)
+- [Iterable e Iterator](#15-iterable-e-iterator)
 
 ### PARTE 5 – Astrazione e Specifiche
 
-1. [Astrazione per specifica](#1-astrazione-per-specifica)
-2. [Le clausole REQUIRES / MODIFIES / EFFECTS](#2-le-clausole-requires--modifies--effects)
-3. [Metodi totali vs metodi parziali](#3-metodi-totali-vs-metodi-parziali)
-4. [Abstract Data Type (ADT)](#4-abstract-data-type-adt)
-5. [Funzione di Astrazione AF(this)](#5-funzione-di-astrazione-afthis)
-6. [Invariante di Rappresentazione RI(this)](#6-invariante-di-rappresentazione-rithis)
-7. [Rep Exposure](#7-rep-exposure)
-8. [OVERVIEW di classe](#8-overview-di-classe)
+- [Astrazione per specifica](#1-astrazione-per-specifica)
+- [Le clausole REQUIRES / MODIFIES / EFFECTS](#2-le-clausole-requires--modifies--effects)
+- [Metodi totali vs metodi parziali](#3-metodi-totali-vs-metodi-parziali)
+- [Abstract Data Type (ADT)](#4-abstract-data-type-adt)
+- [Funzione di Astrazione AF(this)](#5-funzione-di-astrazione-afthis)
+- [Invariante di Rappresentazione RI(this)](#6-invariante-di-rappresentazione-rithis)
+- [Rep Exposure](#7-rep-exposure)
+- [OVERVIEW di classe](#8-overview-di-classe)
 
 ### PARTE 6 – Concetti Avanzati
 
-20. [Clonazione e copia difensiva](#20-clonazione-e-copia-difensiva)
-21. [Classi nested](#21-classi-nested)
-22. [Programmazione funzionale](#22-programmazione-funzionale)
-23. [Design pattern](#23-design-pattern)
-24. [Composizione vs ereditarieta'](#24-composizione-vs-ereditarietà)
+- [Clonazione e copia difensiva](#20-clonazione-e-copia-difensiva)
+- [Classi nested](#21-classi-nested)
+- [Programmazione funzionale](#22-programmazione-funzionale)
+- [Design pattern](#23-design-pattern)
+- [Composizione vs ereditarietà](#24-composizione-vs-ereditarietà)
 
 ### PARTE 7 – Preparazione Esame
 
-25. [Filtro teoria – 30+ domande e risposte](#25-filtro-teoria--30-domande-e-risposte)
-26. [Pattern d'esame pratico](#26-pattern-desame-pratico)
-27. [Soluzione completa: Simulazione Vetreria](#27-soluzione-completa-simulazione-vetreria)
-28. [Soluzione completa: Esame Dicembre – Calendario Sorprese](#28-soluzione-completa-esame-dicembre--calendario-sorprese)
-29. [Soluzione completa: Esame Gennaio – Olimpiadi Invernali](#29-soluzione-completa-esame-gennaio--olimpiadi-invernali)
-30. [ScalaValutazione, strategia e checklist](#30-scalavalutazione-strategia-e-checklist)
+- [Filtro teoria – 30+ domande e risposte](#25-filtro-teoria--30-domande-e-risposte)
+- [Pattern d'esame pratico](#26-pattern-desame-pratico)
+- [Soluzione completa: Simulazione Vetreria](#27-soluzione-completa-simulazione-vetreria)
+- [Soluzione completa: Esame Dicembre – Calendario Sorprese](#28-soluzione-completa-esame-dicembre--calendario-sorprese)
+- [Soluzione completa: Esame Gennaio – Olimpiadi Invernali](#29-soluzione-completa-esame-gennaio--olimpiadi-invernali)
+- [ScalaValutazione, strategia e checklist](#30-scalavalutazione-strategia-e-checklist)
 
 ---
 
