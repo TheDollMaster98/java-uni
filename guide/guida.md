@@ -2245,6 +2245,30 @@ Double.compare(a, b);    // per double
 Long.compare(a, b);      // per long
 ```
 
+### Come si usa `Comparable`
+
+```java
+List<Studente> studenti = new ArrayList<>();
+studenti.add(new Studente("Mario", 3, 27.5));
+studenti.add(new Studente("Anna", 1, 29.0));
+studenti.add(new Studente("Luigi", 2, 24.0));
+
+Collections.sort(studenti);   // usa compareTo: ordine naturale
+```
+
+- Quando usarlo: quando vuoi ordinare una lista con il criterio naturale definito dalla classe stessa.
+- Tipico nell'esame quando il contenitore deve restituire gli elementi ordinati per durata, capienza o anno.
+
+### Come si usa `Comparator`
+
+```java
+studenti.sort(Comparator.comparing(Studente::getNome));
+studenti.sort(Comparator.comparingDouble(Studente::getMedia).reversed());
+```
+
+- Quando usarlo: quando vuoi un ordine alternativo rispetto a quello naturale.
+- Utile se il testo chiede un ordinamento per nome, per voto o per qualsiasi altro criterio esterno.
+
 ---
 
 ## 15. Iterable e Iterator
@@ -2334,6 +2358,21 @@ public class Calendario implements Iterable<Sorpresa> {
 }
 ```
 
+### Come si usa `Iterable`
+
+```java
+Calendario calendario = new Calendario();
+calendario.aggiungi(1, new Sorpresa("Regalo"));
+calendario.aggiungi(5, new Sorpresa("Dolce"));
+
+for (Sorpresa s : calendario) {
+    System.out.println(s);   // chiama iterator() automaticamente
+}
+```
+
+- Quando usarlo: quando vuoi scorrere tutti gli elementi di una collezione con il for-each.
+- Nell'esame e' il modo standard per stampare o visitare gli elementi ordinati.
+
 ### Iterator.remove() – rimozione sicura durante iterazione
 
 ```java
@@ -2406,6 +2445,19 @@ public Iterator<Contenitore> iterator() {
     };
 }
 ```
+
+### Come si usa `Iterator` esplicito
+
+```java
+Iterator<Contenitore> it = vetreria.iterator();
+while (it.hasNext()) {
+    Contenitore c = it.next();
+    System.out.println(c);
+}
+```
+
+- Quando usarlo: quando ti serve controllare passo-passo la scansione oppure rimuovere in modo sicuro con `it.remove()`.
+- E' meno comune del for-each, ma nei temi compare quando devi estrarre o filtrare elementi durante l'iterazione.
 
 ---
 
