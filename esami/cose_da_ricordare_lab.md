@@ -303,6 +303,18 @@ public abstract class Elemento implements Comparable<Elemento> {
 ```
 
 - Uso: `compareTo` per ordine naturale, `equals`/`hashCode` per confronti e mappe, `toString` per output leggibile.
+- Trucchetto memoria per `equals`: 4 passi fissi -> `stesso`, `null`, `tipo`, `campo chiave`.
+
+```java
+@Override
+public boolean equals(Object o) {
+	if (this == o) return true;                 // stesso oggetto in memoria
+	if (o == null) return false;                // confronto con null
+	if (!(o instanceof Elemento)) return false; // tipo incompatibile
+	Elemento other = (Elemento) o;              // cast sicuro dopo instanceof
+	return id.equals(other.id);                 // uguaglianza logica sul campo chiave
+}
+```
 
 #### `Contenitore` iterabile (posizionato o indicizzato)
 
@@ -402,7 +414,8 @@ public abstract class Voce implements Comparable<Voce> {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || !(o instanceof Voce)) return false;
-		return nome.equals(((Voce) o).getNome());
+		Voce other = (Voce) o;
+		return nome.equals(other.getNome());
 	}
 
 	@Override
@@ -415,6 +428,9 @@ public abstract class Voce implements Comparable<Voce> {
 	public String toString() { return nome + " (" + peso + ")"; }
 }
 ```
+
+- Perche' quel `return nome.equals(...)`? Perche' dopo i controlli iniziali devi decidere l'uguaglianza LOGICA: qui hai scelto che due `Voce` sono uguali se hanno lo stesso `nome`.
+- Versione facile da ricordare: evita cast dentro il `return`, crea sempre `other` in una riga dedicata.
 
 #### `Casella` iterabile
 
