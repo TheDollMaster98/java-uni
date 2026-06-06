@@ -61,9 +61,9 @@ Checklist rapida per la parte pratica.
 ## 6. Test.java
 
 - [ ] `Scanner(System.in)` per leggere input
-- [ ] `args[0]` per parametri da riga di comando
-- [ ] `split(" ")` o `split("\\s+")` per parsare i comandi
-- [ ] `try-catch` dentro il ciclo di lettura (non fuori)
+- [ ] `args[0]` per parametri da riga di comando — **solo se il tema lo chiede** (es. anno, dimensione). Se il contenitore non ha parametri, si omette e si fa direttamente `new Contenitore()`
+- [ ] `split(" ")` semplice se tutti i token sono parole singole — `split(" ", N)` con limite se un campo puo' contenere spazi (es. descrizione `"di infinita allegria"`)
+- [ ] `try-catch` dentro il ciclo — per branch separati (gennaio) oppure uno esterno (dicembre)
 - [ ] Catch separati se ci sono piu' tipi di eccezione (`GiornoException`, `EventoException`, ...)
 - [ ] `System.out.println(e.getMessage())` per stampare l'eccezione
 - [ ] Dopo il ciclo: `println(contenitore)` poi intestazione poi `for-each`
@@ -272,8 +272,20 @@ while (scanner.hasNextLine()) {
 }
 ```
 
-- try-catch **dentro ogni branch**, non uno solo esterno: "rimuovi" cattura solo `GiornoException`, "aggiungi" cattura entrambe.
+- try-catch **dentro ogni branch** (gennaio): "rimuovi" cattura solo `GiornoException`, "aggiungi" cattura entrambe. In alternativa un singolo try-catch esterno al blocco if/else (dicembre).
 - `split(" ")` senza `\\s+`, niente `.trim()` — esattamente come negli esami.
+
+**Se un campo puo' contenere spazi** (es. descrizione `"di infinita allegria"`), usa `split` con limite:
+
+```java
+// split(" ", 4) -> ["inserisci", "13", "Giocattolo", "Trippy di infinita allegria"]
+String[] parts = line.split(" ", 4);
+String nome  = parts[3].split(" ")[0];        // prima parola = nome
+String extra = parts[3].split(" ", 2)[1];     // resto = descrizione con spazi
+```
+
+- Il numero `4` dipende da quanti token fissi ci sono prima del campo variabile (comando + giorno + tipo + resto = 4).
+- Usalo solo quando il testo mostra che un campo puo' avere piu' parole.
 
 ### `aggiungi` e `rimuovi` (pattern base)
 
