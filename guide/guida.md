@@ -445,14 +445,26 @@ public class Persona {
         return nome + " (" + eta + " anni)";
     }
 
+    // Definisce quando due Persona sono "logicamente uguali".
+    // Senza questo override, Java confronta solo i riferimenti in memoria (come ==).
+    // Regola: stesso nome E stessa eta' = stessa persona.
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Persona)) return false;
+        if (this == o) return true;                    // stesso oggetto in memoria
+        if (!(o instanceof Persona)) return false;     // tipo diverso
         Persona p = (Persona) o;
         return this.nome.equals(p.nome) && this.eta == p.eta;
     }
 
+    // Restituisce un numero intero che rappresenta l'oggetto.
+    // Regola obbligatoria: se a.equals(b) == true, allora a.hashCode() == b.hashCode().
+    // Serve per HashMap e HashSet: usano hashCode() per trovare il "bucket" giusto.
+    //
+    // Il * 31 serve a combinare piu' campi in un unico hash riducendo le collisioni.
+    // 31 e' un numero primo: moltiplicare per un primo distribuisce meglio i valori
+    // rispetto a numeri pari o potenze di 2.
+    // Es: "Mario"+30 e "oiraM"+30 devono dare hash diversi — il * 31 ci aiuta.
+    // Versione piu' semplice e leggibile (equivalente): Objects.hash(nome, eta)
     @Override
     public int hashCode() {
         return nome.hashCode() * 31 + eta;
