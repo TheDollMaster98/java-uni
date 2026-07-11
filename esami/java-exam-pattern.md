@@ -282,6 +282,37 @@ public class Test {
 
 ---
 
+## 4. Eccezioni
+
+```java
+// UNCHECKED — estende RuntimeException.
+// Il compilatore NON obbliga chi chiama il metodo a fare try-catch.
+// Si usa per errori logici: elemento duplicato, argomento non valido, ecc.
+// Il metodo che la lancia NON deve dichiarare "throws ElementoException".
+public class ElementoException extends RuntimeException {
+    public ElementoException(String message) {
+        super(message);   // passa il messaggio a RuntimeException -> Exception -> Throwable
+    }
+}
+```
+
+```java
+// CHECKED — estende Exception.
+// Il compilatore OBBLIGA chi chiama il metodo a fare try-catch (o a propagare con throws).
+// Si usa per errori "prevedibili" che il programma deve gestire: posizione non valida, ecc.
+// Il metodo che la lancia DEVE dichiarare "throws GiornoException" nella firma.
+public class GiornoException extends Exception {
+    public GiornoException(String message) {
+        super(message);
+    }
+}
+```
+
+> Regola veloce: il testo dice "eccezione controllata" → `extends Exception`.
+> Tutto il resto (o niente specificato) → `extends RuntimeException`.
+
+---
+
 ## Riepilogo pattern
 
 | Cosa                                                | Come                                     | Perche'                                              |
