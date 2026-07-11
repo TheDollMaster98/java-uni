@@ -72,8 +72,22 @@ public abstract class Elemento implements Comparable<Elemento> {
     // piu' campi in modo sicuro (internamente usa lo stesso * 31 visto in guida.md).
     @Override
     public int hashCode() {
-        return Objects.hash(nome);
+        return Objects.hash(nome);   // campo String: Objects.hash lo gestisce direttamente
     }
+
+    // --- Esempi alternativi di hashCode secondo il tipo del campo chiave ---
+    //
+    // Chiave String (caso sopra):
+    //   return Objects.hash(nome);
+    //
+    // Chiave int:
+    //   return Integer.hashCode(numero);   // oppure: return numero; (gia' un int)
+    //
+    // Chiave double:
+    //   return Double.hashCode(valore);    // NON usare (int) valore: perderesti decimali
+    //
+    // Piu' campi insieme (stessi usati in equals):
+    //   return Objects.hash(nome, numero); // Objects.hash accetta quanti campi vuoi
 
     // compareTo: definisce l'ordine naturale usato da Collections.sort().
     // Restituisce: negativo (this < other), zero (uguali), positivo (this > other).
