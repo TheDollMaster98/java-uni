@@ -225,7 +225,105 @@ public class SottoB extends Elemento {
 
 ---
 
-## 3. Test.java
+## 3. Contenitore iterabile
+
+```java
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * OVERVIEW: Contenitore indicizzato di Elemento, posizioni da 1 a size.
+ * Un solo elemento per posizione, nessun duplicato (stesso nome).
+ * Mutabile.
+ *
+ * AF (Abstraction Function): mappa ogni posizione occupata al suo elemento.
+ *      AF(c) = { (i+1, slots[i]) | slots[i] != null, 0 <= i < slots.length }
+ *
+ * RI (Representation Invariant):
+ *      slots != null
+ *      && per ogni i != j: slots[i] != null && slots[j] != null => !slots[i].equals(slots[j])
+ */
+public class Contenitore implements Iterable<Elemento> {
+
+    // Array di slot: slots[i] == null significa posizione libera.
+    // final: l'array stesso non viene mai sostituito, ma il suo contenuto cambia.
+    private final Elemento[] slots;
+
+    // Il costruttore riceve la dimensione da riga di comando (args[0] in Test).
+    // Se il contenitore ha dimensione fissa (es. Calendario a 31 giorni),
+    // si omette il parametro e si scrive direttamente: new Elemento[31]
+    public Contenitore(int size) {
+        if (size <= 0)
+            throw new IllegalArgumentException("\tECCEZIONE: size deve essere > 0");
+        this.slots = new Elemento[size];
+    }
+
+    // aggiungi: inserisce un elemento in posizione pos (1-based).
+    // Tre controlli nell'ordine: posizione valida, slot libero, nessun duplicato.
+    // GiornoException e' checked: il metodo deve dichiararla con throws.
+    // ElementoException e' unchecked: non serve dichiararla, ma si puo' catturare nel Test.
+    public void aggiungi(int pos, Elemento e) throws GiornoException {
+        if (pos < 1 || pos > slots.length)
+            throw new GiornoException("\tECCEZIONE: posizione non valida");
+        if (slots[pos - 1] != null)
+            throw new GiornoException("\tECCEZIONE: posizione gia' occupata");
+        for (Elemento x : slots)
+            if (x != null && x.equals(e))
+                throw new ElementoException("\tECCEZIONE: elemento gia' presente");
+
+        // Vincolo su tipo specifico (solo se il tema lo richiede):
+        // if (e instanceof SottoA) {
+        //     SottoA s = (SottoA) e;          // cast DOPO instanceof
+        //     if (s.getMoltiplicatore() > 10)  // controllo sul campo proprio
+        //         throw new GiornoException("\tECCEZIONE: ...");
+        // }
+
+        slots[pos - 1] = e;   // pos e' 1-based, array e' 0-based
+    }
+
+    // rimuovi: rimuove l'elemento in posizione pos e lo restituisce.
+    // Restituire l'elemento rimosso e' richiesto da alcuni temi (es. "apri la casella").
+    public Elemento rimuovi(int pos) throws GiornoException {
+        if (pos < 1 || pos > slots.length)
+            throw new GiornoException("\tECCEZIONE: posizione non valida");
+        if (slots[pos - 1] == null)
+            throw new GiornoException("\tECCEZIONE: nessun elemento in posizione " + pos);
+        Elemento rimosso = slots[pos - 1];
+        slots[pos - 1] = null;
+        return rimosso;
+    }
+
+    // iterator: restituisce gli elementi presenti ordinati per ordine naturale (compareTo).
+    // Lavora su una COPIA della lista: non modifica mai l'array originale.
+    // Collections.sort usa il compareTo di Elemento, quindi Elemento deve implementare Comparable.
+    // Il for-each nel Test chiama questo metodo automaticamente.
+    @Override
+    public Iterator<Elemento> iterator() {
+        List<Elemento> presenti = new ArrayList<>();
+        for (Elemento e : slots)
+            if (e != null) presenti.add(e);   // raccogli solo gli slot occupati
+        Collections.sort(presenti);            // ordina con compareTo
+        return presenti.iterator();            // restituisce l'iteratore della lista ordinata
+    }
+
+    // toString: stampa gli slot occupati in ordine di POSIZIONE (non di ordine naturale).
+    // StringBuilder e' piu' efficiente di concatenare stringhe con + in un ciclo.
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Contenitore:\n");
+        for (int i = 0; i < slots.length; i++)
+            if (slots[i] != null)
+                sb.append("\t").append(i + 1).append(": ").append(slots[i]).append('\n');
+        return sb.toString();
+    }
+}
+```
+
+---
+
+## 4. Test.java
 
 ```java
 import java.util.Scanner;
