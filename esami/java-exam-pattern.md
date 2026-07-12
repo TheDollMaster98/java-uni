@@ -388,6 +388,8 @@ public class Test {
         System.out.println("Elementi in ordine:");
         for (Elemento e : c)
             System.out.println("\t" + e);   // \t obbligatorio: vedi esempio d'esecuzione
+
+        scanner.close();   // chiudi lo scanner dopo EOF
     }
 }
 ```
