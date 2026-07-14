@@ -98,6 +98,22 @@ public abstract class Elemento implements Comparable<Elemento> {
         return Double.compare(this.valoreCaratteristico(), other.valoreCaratteristico());
     }
 
+    // --- Esempi alternativi di compareTo secondo il tipo del campo ---
+    //
+    // Campo double (caso sopra):
+    //   return Double.compare(this.valore, other.valore);
+    //
+    // Campo int:
+    //   return Integer.compare(this.numero, other.numero);
+    //
+    // Campo String (ordine alfabetico):
+    //   return this.nome.compareTo(other.nome);
+    //
+    // Ordine inverso (dal piu' grande al piu' piccolo):
+    //   return Double.compare(other.valore, this.valore);  // inverti this e other
+    //
+    // MAI fare this.x - other.x: se i valori sono grandi rischi overflow silenzioso.
+
     // toString: rappresentazione testuale dell'oggetto.
     // Viene chiamato automaticamente da System.out.println(oggetto).
     // Inizia con spazio cosi' le sottoclassi fanno "Tipo" + super.toString()
