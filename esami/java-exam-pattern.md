@@ -52,7 +52,7 @@ public abstract class Elemento implements Comparable<Elemento> {
     // ma non sa come calcolarlo — ogni sottoclasse lo implementa con @Override.
     // Alternativa: se il valore e' gia' in un campo del padre (come 'valore'),
     // si omette il metodo astratto e si usa direttamente getValore().
-    public abstract double valoreCaratteristico();
+    public abstract double valoreCaratteristico(); //es il costo
 
     // equals: definisce l'uguaglianza LOGICA tra oggetti.
     // Senza questo, Java confronta solo i riferimenti in memoria (come ==).
