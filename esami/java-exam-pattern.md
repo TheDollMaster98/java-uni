@@ -66,53 +66,26 @@ public abstract class Elemento implements Comparable<Elemento> {
         return nome.equals(other.nome);                  // confronto sul campo chiave
     }
 
-    // hashCode: deve essere COERENTE con equals.
-    // Regola: se a.equals(b) == true, allora a.hashCode() == b.hashCode().
-    // Usa gli stessi campi usati in equals. Objects.hash() gestisce null e combina
-    // piu' campi in modo sicuro (internamente usa lo stesso * 31 visto in guida.md).
     @Override
     public int hashCode() {
-        return Objects.hash(nome);   // campo String: Objects.hash lo gestisce direttamente
+        //EFFECTS: restituisce un intero coerente con equals (stesso nome -> stesso hash)
+        // Chiave int:    Integer.hashCode(numero)
+        // Chiave double: Double.hashCode(valore)
+        return Objects.hash(nome, numero); // esempio con piu' campi
     }
 
-    // --- Esempi alternativi di hashCode secondo il tipo del campo chiave ---
-    //
-    // Chiave String (caso sopra):
-    //   return Objects.hash(nome);
-    //
-    // Chiave int:
-    //   return Integer.hashCode(numero);   // oppure: return numero; (gia' un int)
-    //
-    // Chiave double:
-    //   return Double.hashCode(valore);    // NON usare (int) valore: perderesti decimali
-    //
-    // Piu' campi insieme (stessi usati in equals):
-    //   return Objects.hash(nome, numero); // Objects.hash accetta quanti campi vuoi
-
-    // compareTo: definisce l'ordine naturale usato da Collections.sort().
-    // Restituisce: negativo (this < other), zero (uguali), positivo (this > other).
-    // Double.compare evita overflow rispetto a "this.x - other.x".
-    // Integer.compare se il campo e' int.
+    // MAI fare this.x - other.x: se i valori sono grandi rischi overflow silenzioso.
     @Override
     public int compareTo(Elemento other) {
-        return Double.compare(this.valoreCaratteristico(), other.valoreCaratteristico());
+        //EFFECTS: restituisce un valore negativo se this < other,
+        //         zero se uguali, positivo se this > other
+        //         secondo il valore Caratteristico
+        // Campo int:        Integer.compare(this.x, other.x)
+        // Campo String:     this.nome.compare To(other.nome)
+        // Ordine inverso:   Double.compare(other.x, this.x) //dal > al <
+        return Double.compare(this.valore Caratteristico(), other.valore Caratteristico());
     }
 
-    // --- Esempi alternativi di compareTo secondo il tipo del campo ---
-    //
-    // Campo double (caso sopra):
-    //   return Double.compare(this.valore, other.valore);
-    //
-    // Campo int:
-    //   return Integer.compare(this.numero, other.numero);
-    //
-    // Campo String (ordine alfabetico):
-    //   return this.nome.compareTo(other.nome);
-    //
-    // Ordine inverso (dal piu' grande al piu' piccolo):
-    //   return Double.compare(other.valore, this.valore);  // inverti this e other
-    //
-    // MAI fare this.x - other.x: se i valori sono grandi rischi overflow silenzioso.
 
     // toString: rappresentazione testuale dell'oggetto.
     // Viene chiamato automaticamente da System.out.println(oggetto).
