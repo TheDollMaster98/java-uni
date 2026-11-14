@@ -1,0 +1,1022 @@
+\section{Guida Teorica Completa — Programmazione II (Java 21)}\label{guida-teorica-completa-programmazione-ii-java-21}
+
+\textbf{Università degli Studi di Milano (UNIMI) — Corso di Laurea in Informatica}
+
+\emph{Basata sulle lezioni del Prof. Dragan Ahmetovic, sulle slide ufficiali e sul testo "Program Development in Java" (PDJ) di Barbara Liskov e John Guttag.}
+
+\subsection{1. Introduzione: Decomposizione e Astrazione (PDJ 1)}\label{1-introduzione-decomposizione-e-astrazione-pdj-1}
+
+L'obiettivo dell'ingegneria del software e della programmazione su larga scala è costruire sistemi software dotati di \textbf{modularità} (suddivisione in componenti indipendenti), \textbf{riusabilità} (capacità di riutilizzare codice già scritto), \textbf{correttezza} e \textbf{manutenibilità} (facilità nel correggere errori o aggiungere funzionalità).
+
+\subsubsection{1.1 Dalla Programmazione Imperativa a quella Procedurale}\label{1-1-dalla-programmazione-imperativa-a-quella-procedurale}
+
+\textbf{\texttt{Programmazione Imperativa}}: Paradigma (modello di programmazione) in cui il programma è costituito da una sequenza lineare di comandi/istruzioni eseguite in un ordine preciso che modificano direttamente lo stato della memoria (i valori salvati nelle variabili).
+
+I limiti della programmazione imperativa pura al crescere delle dimensioni del software sono: \textbf{scarsa comprensibilità} (un unico listato troppo lungo), \textbf{difficoltà di riuso} (duplicazione del codice) e \textbf{scarsa modificabilità} (modificare un requisito richiede interventi sparsi ovunque).
+
+\textbf{\texttt{Programmazione Procedurale}}: Evoluzione del paradigma imperativo (basato su comandi sequenziali) in cui le istruzioni vengono raggruppate in \textbf{procedure} (funzioni o sottoprogrammi), ovvero unità logiche isolate, riutilizzabili e parametrizzabili (adattabili a input diversi tramite parametri).
+
+\textbf{Limiti aperti della programmazione procedurale} (che motivano il passaggio alla \texttt{OOP}, Programmazione Orientata agli Oggetti):
+
+\begin{itemize}
+
+\item Difficoltà nel mantenere coerente lo \textbf{stato condiviso/globale} (variabili accessibili da tutte le funzioni).
+
+
+
+\item Difficoltà nel coordinare molti sviluppatori su migliaia di procedure indipendenti.
+
+
+
+\item Assenza di \textbf{incapsulamento} (protezione e isolamento) tra dati e operazioni che li manipolano.
+
+\end{itemize}
+
+\subsubsection{1.2 Decomposizione}\label{1-2-decomposizione}
+
+\textbf{\texttt{Decomposizione}}: Processo progettuale che consiste nel suddividere un problema complesso in sottoproblemi più semplici (\textbf{moduli}, ovvero blocchi autonomi di codice), la cui combinazione risolve il problema originale.
+
+Una buona decomposizione produce \textbf{moduli} (blocchi autonomi di codice) caratterizzati da:
+
+\begin{itemize}
+
+\item \textbf{Alta coesione logica}: Ogni modulo svolge un singolo compito chiaro e ben definito.
+
+
+
+\item \textbf{Indipendenza}: Ogni sottoproblema è isolabile, implementabile e testabile separatamente dagli altri.
+
+
+
+\item \textbf{Stesso livello di dettaglio}: I sottoproblemi devono trovarsi a un livello di astrazione omogeneo (non mescolare operazioni ad alto livello con dettagli di basso livello).
+
+
+
+\item \textbf{Basso accoppiamento} (\texttt{Low Coupling}, dipendenze minime tra i moduli).
+
+\end{itemize}
+
+\subsubsection{1.3 Astrazione: Meccanismi, Benefici e Tipologie}\label{1-3-astrazione-meccanismi-benefici-e-tipologie}
+
+\textbf{\texttt{Astrazione}}: Processo mentale e progettuale che costituisce un \textbf{mapping molti-a-uno} (più problemi concreti vengono ricondotti a un'unica soluzione generale), permettendo di trascurare i dettagli implementativi irrilevanti (\emph{"come"} è scritto il codice) per concentrarsi sugli aspetti essenziali (\emph{"cosa"} fa e su quali dati).
+
+\textbf{Benefici fondamentali dell'astrazione}:
+
+\textbf{\texttt{Località}}: Proprietà per cui un'astrazione può essere implementata, compresa e verificata in modo disgiunto (separato) dal resto del programma; chi la utilizza deve conoscerne esclusivamente la \textbf{specifica} (il contratto esterno), senza doverne leggere il codice interno.
+
+\textbf{\texttt{Modificabilità}}: Proprietà per cui l'\textbf{implementazione} interna (il codice concreto) di un'astrazione può essere sostituita o ottimizzata senza alterare il comportamento dei programmi che la utilizzano, purché la \textbf{specifica} (il comportamento atteso) resti invariata.
+
+\paragraph{I Due Meccanismi di Astrazione}\label{i-due-meccanismi-di-astrazione}
+
+\textbf{\texttt{Astrazione per Parametrizzazione}}: Meccanismo di astrazione (sui \textbf{dati}) che generalizza un modulo sostituendo valori concreti specifici con \textbf{parametri formali} (variabili segnaposto nell'intestazione del metodo), rendendo il codice applicabile a un insieme più ampio di input.
+
+\textbf{\texttt{Astrazione per Specifica}}: Meccanismo di astrazione (sui \textbf{vincoli delle operazioni}) che separa il comportamento atteso (\emph{"cosa fa"}) dall'\textbf{implementazione} concreta (\emph{"come lo fa"}), descrivendo input, precondizioni ed effetti mediante intestazioni e commenti.
+
+\paragraph{I Quattro Tipi di Astrazione del Corso}\label{i-quattro-tipi-di-astrazione-del-corso}
+
+\begin{itemize}
+
+\item \textbf{\texttt{Astrazione Procedurale}}: Definizione di sottoprogrammi (metodi) tramite parametrizzazione e specifica.
+
+
+
+\item \textbf{Astrazione dei Tipi di Dato} (\texttt{ADT}, Tipi di Dato Astratti): Definizione di nuovi tipi di dato che incapsulano stato e comportamenti.
+
+
+
+\item \textbf{\texttt{Astrazione di Gerarchia dei Tipi}}: Estensione e specializzazione di tipi esistenti tramite \textbf{sottotipazione} (creazione di sottotipi).
+
+
+
+\item \textbf{\texttt{Astrazione di Iterazione}}: Accesso sequenziale e uniforme agli elementi di una collezione senza esporne la \textbf{rappresentazione} interna (gli attributi privati).
+
+\end{itemize}
+
+\subsection{2. Il Paradigma Object-Oriented e Fondamenti di Java 21 (PDJ 2)}\label{2-il-paradigma-object-oriented-e-fondamenti-di-java-21-pdj-2}
+
+\subsubsection{2.1 Paradigma Object-Oriented, Classi e Oggetti}\label{2-1-paradigma-object-oriented-classi-e-oggetti}
+
+\textbf{\texttt{Programmazione Orientata agli Oggetti (OOP)}}: Paradigma (modello di programmazione) in cui i dati sono strutturati come \textbf{oggetti}, ciascuno dotato sia di uno \textbf{stato} (un insieme di attributi/variabili interne che ne caratterizzano le proprietà) sia di \textbf{comportamenti} (metodi/funzioni che ispezionano o modificano lo stato dell'oggetto stesso).
+
+\textbf{\texttt{Classe}}: L'archetipo o stampino (\textbf{blueprint}, ovvero il modello astratto) che definisce la struttura (attributi) e i comportamenti (metodi) comuni a tutti gli oggetti di un determinato tipo.
+
+\textbf{\texttt{Oggetto (Istanza)}}: Una singola entità concreta creata in memoria a \textbf{runtime} (durante l'esecuzione del programma) a partire da una classe, caratterizzata da valori specifici per i propri attributi.
+
+\subsubsection{2.2 I Pilastri della OOP e i Package}\label{2-2-i-pilastri-della-oop-e-i-package}
+
+\textbf{\texttt{Incapsulamento (Encapsulation)}}: Principio secondo cui lo stato interno di un oggetto viene nascosto all'esterno (\texttt{private}, accessibile solo dentro la classe stessa), imponendo che ogni ispezione o modifica avvenga esclusivamente attraverso i metodi pubblici dell'oggetto stesso, garantendo così la coerenza dello stato.
+
+\textbf{\texttt{Package}}: Costrutto organizzativo gerarchico di Java (corrispondente alle cartelle del file system) che raggruppa classi correlate, delimita la visibilità a livello di modulo ed evita conflitti di nomi identificando univocamente ogni classe tramite il suo \texttt{Fully Qualified Name} (nome completo comprensivo di tutti i package, es. \texttt{java.util.ArrayList}). Il package \texttt{java.lang} è importato automaticamente.
+
+\subsubsection{2.3 Compilazione, Bytecode, JVM ed Espressioni}\label{2-3-compilazione-bytecode-jvm-ed-espressioni}
+
+\textbf{\texttt{Bytecode e JVM}}: Il compilatore \texttt{javac} traduce il codice sorgente Java (\texttt{.java}) in \texttt{Bytecode} (file \texttt{.class} contenente istruzioni intermedie indipendenti dall'architettura hardware). La \textbf{Java Virtual Machine (JVM)} (macchina virtuale eseguita dal comando \texttt{java}) interpreta ed esegue il \texttt{Bytecode} (codice intermedio) sull'hardware specifico (\emph{Write Once, Run Anywhere}).
+
+\textbf{\texttt{Espressione}}: Costrutto sintattico formato da \textbf{atomi} (variabili, costanti, letterali), \textbf{operatori} (es. \texttt{+}, \texttt{==}) e \textbf{invocazioni di metodi}. Viene valutata da sinistra verso destra e produce sempre un \textbf{tipo} (noto a \textbf{compile-time}, cioè durante la compilazione, per induzione) e un \textbf{valore} (calcolato a \textbf{runtime}, cioè durante l'esecuzione).
+
+\textbf{\texttt{Type Safety (Sicurezza dei Tipi)}}: Proprietà di Java per cui il tipo di ogni espressione e variabile è determinato e verificato staticamente dal compilatore (a \textbf{compile-time}, prima dell'esecuzione), impedendo errori di tipo incompatibile durante l'esecuzione (a \textbf{runtime}).
+
+\subsubsection{2.4 Memoria (Stack vs Heap), Aliasing e Garbage Collector}\label{2-4-memoria-stack-vs-heap-aliasing-e-garbage-collector}
+
+\textbf{\texttt{Tipi Primitivi vs Tipi Riferimento}}:
+
+\begin{quote}\small
+
+- \textbf{Tipi primitivi} (\texttt{byte}, \texttt{short}, \texttt{int}, \texttt{long}, \texttt{float}, \texttt{double}, \texttt{char}, \texttt{boolean}): memorizzano il proprio valore direttamente nello \texttt{Stack} (area di memoria veloce e locale alle chiamate dei metodi, a dimensione fissa).
+
+- \textbf{Tipi riferimento} (oggetti, array, \texttt{String}): memorizzano nello \texttt{Stack} (memoria locale veloce) un \textbf{puntatore/riferimento} (indirizzo di memoria) e allocano i dati effettivi nello \texttt{Heap} (area di memoria dinamica globale in cui risiedono tutti gli oggetti creati con \texttt{new}).
+
+\end{quote}
+
+\textbf{\texttt{Aliasing}}: Situazione in cui due o più variabili di tipo riferimento nello \texttt{Stack} (memoria locale veloce) contengono lo stesso indirizzo di memoria e puntano quindi al medesimo oggetto nello \texttt{Heap} (memoria dinamica globale degli oggetti).
+
+\textbf{\texttt{Garbage Collector (GC)}}: Meccanismo automatico della \texttt{JVM} (Java Virtual Machine, macchina virtuale Java) che individua nello \texttt{Heap} (memoria dinamica globale degli oggetti) gli oggetti non più raggiungibili da alcun riferimento attivo nello \texttt{Stack} (memoria locale veloce) e ne libera automaticamente la memoria.
+
+\textbf{\texttt{Oggetto Immutabile vs Mutabile}}: Un oggetto è \textbf{immutabile} se il suo stato interno nello \texttt{Heap} (memoria dinamica globale degli oggetti) non può essere modificato dopo l'\textbf{istanziazione} (creazione con \texttt{new}) (es. \texttt{String}, \texttt{Integer}); è \textbf{mutabile} se il suo stato nello \texttt{Heap} (memoria dinamica globale) può essere alterato tramite \textbf{metodi mutatori} (metodi che modificano gli attributi interni) (es. \texttt{ArrayList}, array).
+
+\subsubsection{2.5 Passaggio Parametri, Overloading e Wrapping}\label{2-5-passaggio-parametri-overloading-e-wrapping}
+
+\textbf{\texttt{Passaggio dei Parametri per Valore}}: In Java tutti i parametri sono passati per valore: per i \textbf{primitivi} viene copiato il valore nello \texttt{Stack} (memoria locale veloce); per i \textbf{riferimenti} viene copiato l'indirizzo nello \texttt{Stack} (memoria locale veloce) — il metodo non può riassegnare il riferimento del chiamante, ma può mutare l'oggetto nello \texttt{Heap} (memoria dinamica globale degli oggetti) se quest'ultimo è mutabile.
+
+\textbf{\texttt{Overloading (Sovraccaricamento)}}: Possibilità di definire più metodi con lo stesso nome all'interno della stessa classe (o gerarchia) purché differiscano nella lista dei \textbf{parametri formali} (per numero, tipo o ordine dei parametri).
+
+\textbf{\texttt{Most Specific Call}}: Meccanismo di risoluzione a \textbf{compile-time} (durante la compilazione) dell'\textbf{overloading} (metodi con lo stesso nome ma parametri diversi) in presenza di conversioni implicite (\textbf{widening}, ovvero promozione automatica verso un tipo più capiente senza perdita di dati, es. \texttt{int} $\to$ \texttt{double}): il compilatore sceglie il metodo che richiede il minor numero di conversioni; se due metodi richiedono lo stesso numero di conversioni (es. \texttt{m(int, double)} e \texttt{m(double, int)} invocati con \texttt{m(1, 2)}), genera un errore di compilazione per \textbf{ambiguità}.
+
+\textbf{\texttt{Wrapping, Autoboxing e Unboxing}}:
+
+\begin{quote}\small
+
+- \textbf{\texttt{Wrapping}}: incapsulamento di un tipo primitivo (es. \texttt{int}) nella corrispondente classe \texttt{Wrapper} immutabile (classe oggetto che avvolge il primitivo, es. \texttt{Integer}, \texttt{Double}, \texttt{Boolean}).
+
+- \textbf{\texttt{Autoboxing}}: conversione automatica fatta dal compilatore da tipo primitivo a classe \texttt{Wrapper} (classe oggetto corrispondente, \texttt{int} $\to$ \texttt{Integer}).
+
+- \textbf{\texttt{Unboxing}}: conversione automatica inversa da classe \texttt{Wrapper} (classe oggetto corrispondente) a tipo primitivo (\texttt{Integer} $\to$ \texttt{int}, che avviene anche nei confronti con \texttt{==} tra un primitivo e un Wrapper).
+
+\end{quote}
+
+\subsection{3. Astrazione Procedurale e Linguaggio di Specifica (PDJ 3, 9)}\label{3-astrazione-procedurale-e-linguaggio-di-specifica-pdj-3-9}
+
+\subsubsection{3.1 Specifica Procedurale e Clausole di Liskov}\label{3-1-specifica-procedurale-e-clausole-di-liskov}
+
+\textbf{\texttt{Specifica Procedurale}}: Contratto formale o semiformale tra implementatore e chiamante di una procedura: definisce in modo \textbf{dichiarativo} (\emph{"cosa"} fa il metodo, mai \emph{"come"} è implementato, evitando \textbf{specifiche operazionali}, cioè la descrizione passo-passo del codice) le condizioni d'uso e gli effetti dell'esecuzione.
+
+Nel corso si utilizza la notazione di Barbara Liskov tramite commenti strutturati:
+
+\begin{itemize}
+
+\item \textbf{\texttt{REQUIRES (Precondizioni)}}: Vincoli sul \textbf{dominio} (insieme dei valori ammessi in ingresso) non già espressi dai tipi formali (es. \texttt{a != null}, \texttt{b != 0}). Va \textbf{omessa} se non ci sono vincoli sul dominio.
+
+
+
+\item \textbf{\texttt{MODIFIES (Effetti collaterali / Side Effects)}}: Elenca ogni entità preesistente il cui stato viene modificato dal metodo, inclusi parametri mutabili, l'oggetto corrente (\texttt{this}, riferimento all'istanza su cui è invocato il metodo) e gli stream di I/O (canali di ingresso/uscita) di sistema (\textbf{\texttt{System.in}} se legge da standard input, \textbf{\texttt{System.out}} se stampa su standard output). Va \textbf{omessa} se il metodo non modifica nulla.
+
+
+
+\item \textbf{\texttt{EFFECTS (Postcondizioni)}}: Descrive il valore restituito, le modifiche apportate agli oggetti elencati in \texttt{MODIFIES} (effetti collaterali) ed eventuali eccezioni lanciate. È \textbf{sempre presente}.
+
+
+
+\item \textbf{\texttt{OVERVIEW}} (a livello di classe): Descrive lo scopo astratto della classe e dichiara esplicitamente se le sue istanze sono \textbf{mutabili} o \textbf{immutabili}.
+
+\end{itemize}
+
+\subsubsection{3.2 Proprietà delle Specifiche}\label{3-2-proprieta-delle-specifiche}
+
+\textbf{\texttt{Restrittività (di una specifica)}}: Proprietà di una specifica di fornire vincoli sufficienti a escludere tutte le implementazioni scorrette o ambigue.
+
+\textbf{\texttt{Minimalità (di una specifica)}}: Proprietà di una specifica di porre il minor numero possibile di vincoli sui dettagli implementativi (il codice interno), lasciando allo sviluppatore libertà nella scelta dell'algoritmo.
+
+\textbf{\texttt{Sottodeterminazione (di una specifica)}}: Proprietà di una specifica che ammette più implementazioni valide che possono restituire risultati diversi a parità di input (es. restituire l'indice di \emph{una} occorrenza qualunque di un elemento duplicato in un array).
+
+\textbf{\texttt{Determinismo (di un'implementazione)}}: Proprietà di una specifica implementazione (il codice concreto) per cui, a parità di input e stato iniziale, produce sempre lo stesso identico risultato.
+
+\textbf{\texttt{Chiarezza e Ridondanza}}: La specifica deve essere semanticamente non ambigua (avere un unico significato chiaro per tutti gli sviluppatori); può includere \textbf{ridondanza} (ripetere lo stesso concetto in più forme, ad esempio affiancando esempi concreti alla descrizione testuale) per chiarire comportamenti complessi.
+
+\subsubsection{3.3 Proprietà delle Procedure: Totalità vs Parzialità}\label{3-3-proprieta-delle-procedure-totalita-vs-parzialita}
+
+\textbf{\texttt{Semplicità (di una procedura)}}: Proprietà di una procedura che svolge un unico compito ben definito e coerente.
+
+\textbf{\texttt{Generalità (di una procedura)}}: Proprietà di una procedura di essere applicabile a un insieme ampio di input grazie a un'opportuna \textbf{parametrizzazione} (uso di parametri formali al posto di valori fissi).
+
+\textbf{\texttt{Procedura Totale}}: Procedura il cui comportamento è definito per \textbf{ogni} possibile valore ammesso dai tipi dei suoi parametri formali. Non presenta la clausola \texttt{REQUIRES} (precondizioni sul dominio).
+
+\textbf{\texttt{Procedura Parziale}}: Procedura definita solo per un sottoinsieme del \textbf{dominio} (insieme dei valori possibili in ingresso) dei tipi d'ingresso, delimitato dalla clausola \texttt{REQUIRES} (precondizioni). Se il chiamante viola \texttt{REQUIRES}, il comportamento è \textbf{indefinito} (può crashare, entrare in loop infinito o produrre risultati errati).
+
+\subsection{4. Gestione delle Eccezioni (PDJ 4)}\label{4-gestione-delle-eccezioni-pdj-4}
+
+\subsubsection{4.1 Robustezza e Limiti dei Meccanismi Alternativi}\label{4-1-robustezza-e-limiti-dei-meccanismi-alternativi}
+
+\textbf{\texttt{Graceful Degradation}}: Capacità di un programma di gestire condizioni anomale o errori in modo controllato e prevedibile, evitando crash improvvisi o la propagazione silente di dati corrotti.
+
+\textbf{\texttt{Errori di Propagazione}}: Errore critico che si verifica quando una procedura segnala un fallimento restituendo un valore speciale del \textbf{codominio} (insieme dei valori di ritorno, es. \texttt{-1} o \texttt{0}) o tramite il pattern \textbf{Comma-Ok} (restituzione simultanea di valore ed esito booleano), e il chiamante dimentica di verificarlo, propagando un valore errato nei calcoli successivi.
+
+\subsubsection{4.2 Le Eccezioni in Java}\label{4-2-le-eccezioni-in-java}
+
+\textbf{\texttt{Eccezione}}: Oggetto (sottotipo di \texttt{java.lang.Throwable}, la superclasse radice di tutti gli errori ed eccezioni in Java) che rappresenta una condizione anomala o eccezionale; il suo lancio (\texttt{throw}) interrompe immediatamente il flusso sequenziale della procedura, separando la gestione degli errori dal \textbf{codominio} normale (i valori di ritorno standard) del metodo e permettendo di \textbf{rendere totali procedure parziali} (spostando i vincoli da \texttt{REQUIRES}, le precondizioni, a \texttt{EFFECTS}, le postcondizioni).
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,breaklines=true,columns=flexible]
+
+                    java.lang.Throwable
+                     /               \
+            java.lang.Error     java.lang.Exception
+              (Unchecked)          /             \
+                         (Checked Exceptions)   java.lang.RuntimeException
+                         es. IOException            (Unchecked Exceptions)
+                             FileNotFoundException  es. NullPointerException
+                                                        IllegalArgumentException
+                                                        ArithmeticException
+                                                        IndexOutOfBoundsException
+                                                        NoSuchElementException
+
+
+\end{lstlisting}
+
+\textbf{\texttt{Error vs Checked Exceptions vs Unchecked Exceptions}}:
+
+\begin{quote}\small
+
+- \textbf{\texttt{Error (Unchecked, non controllata dal compilatore)}}: Errori fatali e irrecuperabili della \texttt{JVM} (Java Virtual Machine, macchina virtuale Java) o del sistema operativo (es. \texttt{OutOfMemoryError}, esaurimento della memoria).
+
+- \textbf{\texttt{Checked Exceptions (Eccezioni controllate)}}: Sottotipi di \texttt{Exception} (esclusa \texttt{RuntimeException}) che rappresentano errori prevedibili e recuperabili (es. \texttt{FileNotFoundException}). Il compilatore \textbf{obbliga} a gestirle con \texttt{try-catch} (cattura locale) o a dichiararle nella firma del metodo con \texttt{throws} (propagazione al chiamante).
+
+- \textbf{\texttt{Unchecked Exceptions (Eccezioni non controllate)}}: Sottotipi di \texttt{RuntimeException} (eccezioni a tempo di esecuzione) che rappresentano violazioni di precondizioni o bug di programmazione (es. \texttt{IllegalArgumentException}, \texttt{NullPointerException}).
+
+- \textbf{Regola di Liskov vs Java per \texttt{throws} (Trappola d'esame):} Sebbene il compilatore Java non imponga di dichiarare le \textbf{unchecked exceptions} (sottotipi di \texttt{RuntimeException}) nella firma, secondo la metodologia di Liskov (PDJ) \textbf{vanno dichiarate nella clausola \texttt{throws} e documentate in \texttt{EFFECTS} tutte le eccezioni lanciate esplicitamente}, incluse le \textbf{unchecked} (non controllate).
+
+\end{quote}
+
+\subsubsection{4.3 Strategia di Gestione: Masking vs Reflection}\label{4-3-strategia-di-gestione-masking-vs-reflection}
+
+\textbf{\texttt{Masking (Mascheramento)}}: Strategia di gestione in cui un metodo cattura localmente (\texttt{try-catch}) un'eccezione sollevata da un sottoprogramma e la risolve autonomamente senza propagarla al proprio chiamante.
+
+\textbf{\texttt{Reflection (Riflessione)}}: Strategia di gestione in cui un metodo non cattura localmente un'eccezione (o la cattura solo per rilanciare un'eccezione più astratta e significativa per il proprio livello), lasciandola propagare al metodo chiamante tramite la clausola \texttt{throws}.
+
+\subsection{5. Astrazione dei Tipi di Dato (ADT) e Implementazione (PDJ 5.1–5.4, 5.8)}\label{5-astrazione-dei-tipi-di-dato-adt-e-implementazione-pdj-5-1-5-4-5-8}
+
+\subsubsection{5.1 Definizione di ADT, Rappresentazione e Adeguatezza}\label{5-1-definizione-di-adt-rappresentazione-e-adeguatezza}
+
+\textbf{\texttt{Tipo di Dato Astratto (ADT)}}: Tipo di dato definito esclusivamente dall'insieme dei suoi valori astratti e dalle operazioni pubbliche che lo manipolano, nascondendo completamente la \textbf{rappresentazione concreta} (gli attributi privati salvati in memoria).
+
+\textbf{\texttt{Rappresentazione (Rep)}}: L'insieme degli attributi privati (\texttt{private}, visibili solo dentro la classe stessa) di una classe che memorizzano lo stato concreto di ogni istanza nello \texttt{Heap} (memoria dinamica globale degli oggetti).
+
+\textbf{\texttt{Adeguatezza (Adequacy)}}: Proprietà di un \texttt{ADT} (Tipo di Dato Astratto) di esporre un insieme di operazioni sufficiente e appropriato a consentire ai \textbf{client} (chi usa la classe) di svolgere comodamente ed efficientemente tutti i compiti previsti dal dominio senza violare l'\textbf{incapsulamento} (la segretezza degli attributi interni).
+
+\subsubsection{5.2 Tassonomia dei Metodi di un ADT}\label{5-2-tassonomia-dei-metodi-di-un-adt}
+
+\begin{itemize}
+
+\item \textbf{\texttt{Metodi d'Istanza vs Metodi di Classe (static)}}: I metodi d'istanza operano sullo stato di un oggetto specifico (\texttt{this}, riferimento all'istanza corrente); i metodi \texttt{static} (statici) appartengono alla classe, non hanno accesso a \texttt{this} e operano esclusivamente sui parametri ricevuti.
+
+
+
+\item \textbf{\texttt{Costruttori (Creators)}}: Creano e inizializzano una nuova istanza del tipo. Includono il \textbf{Copy Constructor} (costruttore che accetta un'istanza dello stesso tipo per crearne una copia) e i \textbf{Metodi Factory statici} (metodi \texttt{static} che creano e restituiscono una nuova istanza della classe, utili nelle gerarchie perché non vincolano al nome fisso del costruttore).
+
+
+
+\item \textbf{\texttt{Osservatori (Observers)}}: Restituiscono informazioni sullo stato dell'oggetto senza modificarlo (es. getter, \textbf{predicati}, cioè metodi che restituiscono un booleano). Non hanno \texttt{MODIFIES}.
+
+
+
+\item \textbf{\texttt{Mutatori (Mutators)}}: Modificano lo stato interno dell'oggetto (\texttt{MODIFIES: this}). Esistono \textbf{solo} negli \texttt{ADT} (Tipi di Dato Astratti) mutabili.
+
+
+
+\item \textbf{\texttt{Produttori (Producers)}}: Partendo da istanze esistenti del tipo, creano e restituiscono una \textbf{nuova istanza} dello stesso tipo senza alterare gli operandi (tipici degli \texttt{ADT}, Tipi di Dato Astratti, immutabili).
+
+\end{itemize}
+
+\subsubsection{5.3 Esposizione della Rappresentazione (Representation Exposure)}\label{5-3-esposizione-della-rappresentazione-representation-exposure}
+
+\textbf{\texttt{Representation Exposure (Esposizione della Rappresentazione)}}: Violazione dell'\textbf{incapsulamento} (segretezza dello stato interno) che si verifica quando il codice esterno alla classe ottiene un riferimento diretto a un oggetto mutabile facente parte della \textbf{rep} (rappresentazione privata), potendolo modificare senza passare per i metodi della classe e rompendo potenzialmente l'\textbf{invariante di rappresentazione} (la validità dello stato interno).
+
+\textbf{Prevenzione}: Attributi sempre \texttt{private} (privati) + \textbf{Copia Difensiva} (\textbf{Defensive Copying}, ovvero duplicazione degli oggetti mutabili in ingresso nel costruttore/mutatore e in uscita negli osservatori/clone).
+
+\subsubsection{5.4 I Quattro Metodi Fondamentali di \texttt{java.lang.Object}}\label{5-4-i-quattro-metodi-fondamentali-di-java-lang-object}
+
+\begin{itemize}
+
+\item \textbf{\texttt{equals(Object o)}}: Verifica l'uguaglianza logica tra due oggetti. Deve formare una \textbf{relazione di equivalenza} (relazione che soddisfa le proprietà riflessiva, simmetrica e transitiva):
+
+\item \textbf{\texttt{Riflessiva}}: \texttt{x.equals(x)} è \texttt{true} (ogni oggetto è uguale a se stesso).
+
+
+
+\item \textbf{\texttt{Simmetrica}}: \texttt{x.equals(y)} $\iff$ \texttt{y.equals(x)} (l'ordine dei due oggetti nel confronto non cambia il risultato).
+
+
+
+\item \textbf{\texttt{Transitiva}}: se \texttt{x.equals(y)} e \texttt{y.equals(z)}, allora \texttt{x.equals(z)}.
+
+
+
+\item \textbf{\texttt{Coerente}}: restituisce sempre lo stesso valore se gli oggetti non vengono modificati.
+
+
+
+\item \textbf{\texttt{Null-safe}}: \texttt{x.equals(null)} restituisce sempre \texttt{false}.
+
+\end{itemize}
+
+   > \textbf{Trappola d'esame — \texttt{equals} vs \texttt{similar} (Liskov vs Java) e Uguaglianza nelle Gerarchie:}    >    > - \textbf{Mutabili in Liskov vs Java:} Per Liskov, due oggetti mutabili sono \texttt{equals} \emph{solo se sono lo stesso identico oggetto} (\texttt{==}, equivalenza comportamentale nel tempo), mentre due oggetti mutabili distinti con lo stesso stato istantaneo si dicono \textbf{simili} (\texttt{similar}). In Java, molte collezioni (es. \texttt{ArrayList}, lista dinamica) implementano \texttt{equals} sullo stato corrente: di conseguenza, mutare un oggetto dopo averlo inserito in un \texttt{HashSet} (insieme basato su hash) o come chiave di una \texttt{HashMap} (mappa chiave-valore basata su hash) invalida la struttura dati.    > - \textbf{Uguaglianza Conservativa vs Rilassata:} L'implementazione \textbf{conservativa} (\texttt{this.getClass() == o.getClass()}, confronto esatto della classe concreta) richiede lo stesso identico \textbf{tipo concreto} (classe reale dell'oggetto); l'implementazione \textbf{rilassata} (\texttt{o instanceof Supertipo}, controllo di appartenenza alla gerarchia) ammette il confronto tra supertipo e sottotipo ma può rompere \textbf{simmetria} o \textbf{transitività} se il sottotipo aggiunge attributi rilevanti (es. \texttt{Punto2D} vs \texttt{Punto3D}).
+
+\begin{itemize}
+
+\item \textbf{\texttt{hashCode()}}: Restituisce un intero usato dalle strutture dati basate su hash (\texttt{HashMap}, mappa chiave-valore; \texttt{HashSet}, insieme senza duplicati).
+
+\item \textbf{\texttt{Contratto equals–hashCode}}: Se \texttt{a.equals(b)} è \texttt{true}, allora \textbf{deve} valere \texttt{a.hashCode() == b.hashCode()}. Non vale il viceversa (due oggetti diversi possono avere lo stesso \texttt{hashCode}: \textbf{collisione}).
+
+
+
+\item \textbf{\texttt{clone()}}: Restituisce una copia dell'oggetto (richiede \texttt{implements Cloneable}, interfaccia segnaposto per la clonazione).
+
+\item \textbf{\texttt{Shallow Copy (Copia superficiale) vs Deep Copy (Copia profonda)}}: \texttt{super.clone()} esegue una \textbf{Shallow Copy} (copia i primitivi e i puntatori nello \texttt{Stack}, memoria locale veloce, condividendo gli oggetti mutabili nello \texttt{Heap}, memoria dinamica globale); una \textbf{Deep Copy} (copia profonda) clona ricorsivamente anche tutti gli oggetti mutabili nello \texttt{Heap} (memoria dinamica globale degli oggetti).
+
+
+
+\item \textbf{\texttt{toString()}}: Restituisce una rappresentazione testuale chiara dell'oggetto astratto.
+
+\end{itemize}
+
+\textbf{\texttt{record (Java 21)}}: Costrutto sintattico (\texttt{public record Punto(int x, int y) \{\}}) per definire \texttt{ADT} (Tipi di Dato Astratti) \textbf{immutabili} puramente portatori di dati: genera automaticamente campi \texttt{private final} (privati e non riassegnabili), costruttore canonico, metodi osservatori (\texttt{x()}, \texttt{y()}), \texttt{equals()}, \texttt{hashCode()} e \texttt{toString()}.
+
+\subsection{6. Correttezza degli ADT: Funzione di Astrazione (AF) e Invariante di Rappresentazione (RI) (PDJ 5.5–5.7)}\label{6-correttezza-degli-adt-funzione-di-astrazione-af-e-invariante-di-rappresentazione-ri-pdj-5-5-5-7}
+
+Il processo di sviluppo di un \texttt{ADT} (Tipo di Dato Astratto) segue tre fasi: \textbf{1) Specifica} (definizione astratta di dato e operazioni), \textbf{2) Scelta della Rappresentazione} (selezione degli attributi \texttt{private}), \textbf{3) Implementazione delle Procedure}.
+
+\subsubsection{6.1 Funzione di Astrazione \texorpdfstring{($AF$)}{(AF)}}\label{6-1-funzione-di-astrazione-af}
+
+\textbf{\texttt{Funzione di Astrazione (\$AF\$)}}: Funzione matematica $AF : C \to A$ che associa a ogni stato concreto \textbf{valido} $c \in C$ (configurazione degli attributi privati nello \texttt{Heap}, memoria dinamica globale) l'oggetto astratto $a \in A$ (entità concettuale) che esso rappresenta.
+
+\begin{quote}\small
+
+
+
+- \textbf{Dominio}: L'insieme degli stati concreti validi di $C$ (dove $RI(c) = \text{True}$).
+
+- \textbf{Codominio}: L'insieme di tutti gli oggetti astratti $a \in A$.
+
+- \textbf{Proprietà e Popolamento Completo (Fully Populates):} È \textbf{suriettiva} (ogni possibile valore astratto $a \in A$ ha almeno uno stato concreto valido $c \in C$ che lo rappresenta, ossia la classe \emph{"popola completamente"} l'\texttt{ADT}, Tipo di Dato Astratto) e \textbf{non-iniettiva / molti-a-uno} (più rappresentazioni concrete distinte possono corrispondere allo stesso oggetto astratto, es. \texttt{[1, 2]} e \texttt{[2, 1]} rappresentano entrambi l'insieme $\{1, 2}$).
+
+- \textbf{Implementazione}: Corrisponde al metodo \textbf{\texttt{toString()}}.
+
+\end{quote}
+
+\subsubsection{6.2 Invariante di Rappresentazione \texorpdfstring{($RI$)}{(RI)}}\label{6-2-invariante-di-rappresentazione-ri}
+
+\textbf{\texttt{Invariante di Rappresentazione (\$RI\$)}}: \textbf{Predicato} booleano (funzione che restituisce \texttt{true} o \texttt{false}) $RI : C \to \{\text{True}, \text{False}\}$ definito sull'intero spazio degli stati concreti $C$, che restituisce $\text{True}$ se e solo se $c$ è una rappresentazione valida e coerente di un oggetto astratto:
+
+\begin{quote}\small
+
+
+
+\[
+
+RI(c) = \text{True} \iff \exists a \in A \mid AF(c) = a
+
+\]
+
+
+
+- L'insieme $\{c \in C \mid RI(c) = \text{True}\}$ coincide esattamente con il \textbf{dominio della funzione di astrazione} $AF$ (insieme degli stati concreti validi).
+
+- \textbf{Struttura}: \textbf{Congiunzione logica} (combinazione di più condizioni unite dall'operatore \texttt{AND} / \texttt{\&\&}) di predicati sugli attributi.
+
+- \textbf{Validità}: Deve valere \textbf{al termine di ogni costruttore} e \textbf{al termine di ogni metodo pubblico} (può essere temporaneamente violata \emph{durante} l'esecuzione interna di un \textbf{mutatore}, metodo che modifica lo stato).
+
+- \textbf{Implementazione}: Metodo \textbf{\texttt{public boolean repOk()}}, verificato tramite \textbf{\texttt{assert repOk();}} (abilitato a \textbf{runtime}, durante l'esecuzione, con il flag della \texttt{JVM}, Java Virtual Machine, \textbf{\texttt{-ea}}, \emph{enable assertions}).
+
+\end{quote}
+
+\subsubsection{6.3 Induzione sui Tipi di Dato, Invariante di Astrazione e Effetti Benevoli}\label{6-3-induzione-sui-tipi-di-dato-invariante-di-astrazione-e-effetti-benevoli}
+
+\textbf{\texttt{Dimostrazione per Induzione sul Tipo di Dato}}: Tecnica formale per dimostrare che l'\textbf{invariante di rappresentazione} $RI$ (validità dello stato concreto) vale per ogni istanza raggiungibile di una classe:
+
+\begin{quote}\small
+
+
+
+1. \textbf{Caso Base}: Tutti i costruttori e i \textbf{metodi factory} (metodi statici creatori) producono stati $c$ tali che $RI(c) = \text{True}$.
+
+2. \textbf{Passo Induttivo}: Assumendo $RI(c) = \text{True}$ prima della chiamata, ogni metodo \textbf{mutatore} (che altera lo stato) o \textbf{produttore} (che crea una nuova istanza) produce uno stato $c'$ tale che $RI(c') = \text{True}$.
+
+\end{quote}
+
+\textbf{\texttt{Invariante di Astrazione (\$AI\$)}}: Vincolo di coerenza relativo alla \textbf{specifica} dell'\texttt{ADT} (Tipo di Dato Astratto) (indipendente dagli attributi privati della rappresentazione): verifica che le operazioni specificate mantengano sempre valido il concetto astratto modellato.
+
+\textbf{\texttt{Effetti Collaterali Benevoli (Benevolent Side Effects)}}: Modifiche alla rappresentazione concreta interna ($c_1 \to c_2$, variazione degli attributi privati nello \texttt{Heap}, memoria dinamica globale) di un \texttt{ADT} (Tipo di Dato Astratto) \textbf{astrattamente immutabile} (implementato con rappresentazione mutabile e $AF$, Funzione di Astrazione, \textbf{molti-a-uno}, dove più stati concreti mappano allo stesso stato astratto) che preservano sia $RI$ (Invariante di Rappresentazione) sia il risultato della funzione di astrazione ($AF(c_1) = AF(c_2)$), ad esempio riordinare un array interno per velocizzare le ricerche o usare una cache interna.
+
+\subsection{7. Gerarchie di Tipi, Principio di Sostituzione di Liskov (LSP) e Composizione (PDJ 7)}\label{7-gerarchie-di-tipi-principio-di-sostituzione-di-liskov-lsp-e-composizione-pdj-7}
+
+\subsubsection{7.1 La Relazione di Sottotipo \texorpdfstring{($\prec$)}{(sottotipo)}, Proprietà e Dispatching}\label{7-1-la-relazione-di-sottotipo-prec-proprieta-e-dispatching}
+
+\textbf{\texttt{Relazione di Sottotipo}}: Una classe o interfaccia $T$ che estende (\texttt{extends}) o implementa (\texttt{implements}) $S$ è un \textbf{sottotipo} di $S$, indicato con il simbolo $T \prec S$ (e reciprocamente $S$ è \textbf{supertipo} di $T$).
+
+\textbf{Proprietà Formali e Strutturali della Relazione $\prec$ (Fondamentali per il Quiz)}:
+
+\begin{quote}\small
+
+1. \textbf{\texttt{Transitivita}}: Se $A \prec B$ e $B \prec C$, allora $A \prec C$ (es. \texttt{StudenteMagistrale} $\prec$ \texttt{Studente} $\prec$ \texttt{Persona} $\prec$ \texttt{Object} $\implies$ \texttt{StudenteMagistrale} $\prec$ \texttt{Object}).
+
+2. \textbf{\texttt{Antisimmetria (Aciclicità)}}: Se $A \preceq B$ e $B \preceq A$, allora $A = B$ (non possono esistere cicli nelle gerarchie di tipi: $A \prec B \prec A$ è vietato dal compilatore).
+
+3. \textbf{Riflessività in senso lato} ($T \preceq T$): Ogni tipo è compatibile con se stesso; in senso stretto ($A \prec B$) indica un sottotipo proprio ($A \neq B$).
+
+4. \textbf{\texttt{Elemento Massimo (Top Type)}}: La classe \texttt{java.lang.Object} è in cima alla gerarchia: per ogni tipo riferimento $T \neq \text{Object}$ vale $T \prec \text{Object}$.
+
+5. \textbf{\texttt{Topologia della Gerarchia (Albero vs DAG)}}:
+
+   - Poiché Java ammette solo l'ereditarietà singola tra classi (\texttt{extends}), la gerarchia delle sole classi forma un \textbf{Albero} radicato in \texttt{Object}.
+
+   - Poiché Java ammette l'implementazione multipla di interfacce (\texttt{implements I1, I2}), la gerarchia complessiva dei tipi forma un \textbf{DAG} (\textbf{Directed Acyclic Graph}, grafo orientato aciclico).
+
+
+
+6. \textbf{\texttt{Proprietà di Assegnabilità (Sostituzione)}}: Se $T \prec S$, allora è sempre valida l'assegnazione di un'espressione di tipo $T$ a una variabile o parametro formale di tipo $S$ (\texttt{S x = new T();}). Non vale il viceversa senza un \textbf{downcast} esplicito (conversione forzata verso un sottotipo più specifico, es. \texttt{(T) x}).
+
+\end{quote}
+
+\textbf{\texttt{Tipo Apparente vs Tipo Concreto}}: Data l'assegnazione \texttt{S x = new T();} con $T \prec S$:
+
+\begin{quote}\small
+
+
+
+- Il \textbf{Tipo Apparente} ($S$) è il tipo dichiarato a \textbf{compile-time} (durante la compilazione) e stabilisce \textbf{quali metodi sono invocabili} sul riferimento.
+
+- Il \textbf{Tipo Concreto} ($T$) è la classe reale dell'oggetto istanziato nello \texttt{Heap} (memoria dinamica globale degli oggetti) a \textbf{runtime} (durante l'esecuzione) e stabilisce \textbf{quale implementazione viene eseguita}.
+
+\end{quote}
+
+\textbf{\texttt{Dynamic Method Dispatch (Dispatching Dinamico)}}: Meccanismo per cui a \textbf{compile-time} (durante la compilazione) il compilatore seleziona la \textbf{segnatura} (intestazione del metodo) più specifica basandosi sul \textbf{tipo apparente} (tipo dichiarato della variabile), mentre a \textbf{runtime} (durante l'esecuzione) la \texttt{JVM} (Java Virtual Machine, macchina virtuale Java) invoca l'implementazione ridefinita (\textbf{override}, riscrittura del metodo nella sottoclasse) più specifica basandosi sul \textbf{tipo concreto} (classe reale dell'oggetto nello \texttt{Heap}, memoria dinamica globale).
+
+\begin{quote}\small
+
+
+
+- \textbf{Trappola d'esame — Costruttori e Override:} Se il costruttore della superclasse (\texttt{super(...)}, che deve essere la prima istruzione del costruttore della sottoclasse) invoca un metodo ridefinito dalla sottoclasse (es. \texttt{repOk()}), a \textbf{runtime} (durante l'esecuzione) viene eseguito l'\textbf{override} (versione ridefinita) della sottoclasse \emph{prima} che gli attributi specifici della sottoclasse siano inizializzati.
+
+\end{quote}
+
+\subsubsection{7.2 Il Principio di Sostituzione di Liskov (LSP)}\label{7-2-il-principio-di-sostituzione-di-liskov-lsp}
+
+\textbf{\texttt{Principio di Sostituzione di Liskov (LSP)}}: Se $T \prec S$ ($T$ è sottotipo di $S$), allora gli oggetti di tipo $S$ in un programma possono essere sostituiti con oggetti di tipo $T$ senza alterare alcuna delle proprietà desiderabili di correttezza del programma stesso.
+
+Affinché $T \prec S$ rispetti \texttt{LSP} (Principio di Sostituzione di Liskov) devono valere \textbf{tre regole}:
+
+\textbf{\texttt{1. Regola delle Segnature (LSP)}}: \emph{(Verificata dal compilatore a compile-time)} Per ogni metodo $m$ di $S$, deve esistere in $T$ un metodo $m'$ con \textbf{segnatura} (intestazione) compatibile:
+
+\begin{quote}\small
+
+
+
+- \textbf{Nome e Parametri}: Stesso nome e \textbf{stessi tipi dei parametri formali} ($P_{m'} = P_m$, \textbf{invarianza} in Java, cioè i tipi dei parametri non possono cambiare; la teoria di Liskov ammetterebbe parametri \textbf{controvarianti} $P_m \prec P_{m'}$, cioè tipi più generali nella sottoclasse, ma Java non la supporta perché genererebbe \textbf{overloading}, sovraccaricamento).
+
+- \textbf{Tipo di ritorno covariante} (varia nella stessa direzione della gerarchia): Se $m$ restituisce $R_m$ e $m'$ restituisce $R_{m'}$, allora deve valere $R_{m'} \prec R_m$ oppure $R_{m'} = R_m$.
+
+- \textbf{Eccezioni}: $m'$ non può lanciare nuove \textbf{checked exceptions} (eccezioni controllate dal compilatore) non previste da $m$; per ogni eccezione $E_{m'}$ lanciata da $m'$, deve esistere un'eccezione $E_m$ in $m$ tale che $E_{m'} \prec E_m$ oppure $E_{m'} = E_m$.
+
+\end{quote}
+
+\textbf{\texttt{2. Regola dei Metodi (LSP)}}: \emph{(Comportamentale, NON verificata dal compilatore)} Il metodo ridefinito $m'$ in $T$ deve preservare il comportamento di $m$ in $S$:
+
+\begin{quote}\small
+
+
+
+- \textbf{Precondizioni indebolite} (o uguali): $\text{pre}_m \implies \text{pre}_{m'}$ (può accettare un \textbf{dominio}, cioè insieme di input, più ampio, mai più restrittivo).
+
+- \textbf{Postcondizioni rinforzate} (o uguali): $(\text{pre}_m \land \text{post}_{m'}) \implies \text{post}_m$ (sugli input validi per $m$, deve garantire almeno tutto ciò che prometteva $m$).
+
+\end{quote}
+
+\textbf{\texttt{3. Regola delle Proprietà (LSP)}}: \emph{(NON verificata dal compilatore)} Il sottotipo $T \prec S$ deve conservare tutte le proprietà dimostrabili per $S$:
+
+\begin{quote}\small
+
+
+
+- \textbf{Invarianti}: Tutte le invarianti di $S$ devono valere anche per $T$ (nella \texttt{repOk()} di $T$ occorre richiamare \textbf{\texttt{super.repOk()}}, il controllo dell'invariante della superclasse).
+
+- \textbf{Proprietà evolutive}: $T$ deve rispettare tutti i vincoli sulle transizioni di stato nel tempo ammesse da $S$.
+
+\end{quote}
+
+\subsubsection{7.3 Classi Concrete, Classi Astratte, Interfacce e Tipi di Supertipi}\label{7-3-classi-concrete-classi-astratte-interfacce-e-tipi-di-supertipi}
+
+\textbf{\texttt{Classe Concreta vs Classe Astratta vs Interfaccia}}:
+
+\begin{quote}\small
+
+- \textbf{\texttt{Classe Concreta}}: Classe completa istanziabile con \texttt{new} nello \texttt{Heap} (memoria dinamica globale), dotata di stato (attributi) e di tutti i metodi implementati.
+
+- \textbf{\texttt{Classe Astratta (abstract class)}}: Classe non istanziabile direttamente con \texttt{new} che modella un'implementazione parziale; può avere stato (attributi), costruttori (invocati dalle sottoclassi con \texttt{super(...)}) e metodi sia concreti sia \texttt{abstract} (privi di corpo). Supporta ereditarietà singola (\texttt{extends}).
+
+- \textbf{\texttt{Interfaccia (interface)}}: Contratto comportamentale puro privo di stato d'istanza (niente attributi non-costanti) e costruttori; dichiara segnature di metodi (e opzionalmente metodi \texttt{default} con implementazione predefinita e metodi \texttt{static}). Supporta \textbf{ereditarietà multipla} (\texttt{implements I1, I2}).
+
+\end{quote}
+
+\textbf{\texttt{I Tre Tipi di Supertipi (PDJ 7.10)}}:
+
+\begin{quote}\small
+
+1. \textbf{Supertipi Completi:} Definiscono un'intera astrazione di dati con specifiche complete per tutti i metodi.
+
+2. \textbf{Supertipi Incompleti:} Stabiliscono solo convenzioni sui nomi dei metodi, con specifiche troppo deboli per scrivere codice generico in termini del supertipo.
+
+3. \textbf{Snippet (sempre interfacce):} Definiscono uno o pochissimi metodi con specifica precisa e completa (es. \texttt{Comparable}, \texttt{Cloneable}, \texttt{Iterable}), consentendo di scrivere codice \textbf{polimorfico} (riutilizzabile su tipi diversi).
+
+\end{quote}
+
+\textbf{\texttt{Implementazione per Comportamento}}: Tecnica con cui i metodi \texttt{default} di un'interfaccia (o i metodi di una sottoclasse) vengono implementati invocando esclusivamente altri metodi pubblici/astratti del contratto stesso, senza accedere direttamente alla \textbf{rappresentazione} (gli attributi privati).
+
+\textbf{\texttt{Modificatori di Visibilità}}:
+
+\begin{quote}\small
+
+- \texttt{private} (privato): accessibile solo all'interno della classe stessa.
+
+- \emph{package-private} (visibilità di default, nessuna keyword): accessibile a tutte le classi dello stesso \textbf{package} (cartella/modulo).
+
+- \texttt{protected} (protetto): accessibile alle classi dello stesso \textbf{package} (cartella/modulo) \textbf{e} a tutte le sottoclassi (anche in altri package).
+
+- \texttt{public} (pubblico): accessibile ovunque.
+
+\end{quote}
+
+\subsubsection{7.4 Astrazioni Ontologiche Errate, Composizione e Delega}\label{7-4-astrazioni-ontologiche-errate-composizione-e-delega}
+
+\textbf{\texttt{Astrazione Ontologica Errata}}: Discrepanza tra una relazione concettuale \textbf{IS-A} (\emph{"è un"} nel mondo reale) e la sottotipazione comportamentale in \texttt{OOP} (Programmazione Orientata agli Oggetti). Esempio canonico: un \texttt{Quadrato} \emph{è} ontologicamente un \texttt{Rettangolo}, ma in un modello mutabile con \texttt{setBase} e \texttt{setAltezza}, \texttt{Quadrato extends Rettangolo} viola \texttt{LSP} (Principio di Sostituzione di Liskov: o rompe l'invariante del quadrato o viola la postcondizione di \texttt{setAltezza} del rettangolo).
+
+\textbf{\texttt{Composizione e Delega (HAS-A)}}: Tecnica progettuale alternativa all'ereditarietà in cui una classe contiene un riferimento privato a un'istanza di un'altra classe come attributo (\textbf{composizione}, relazione \emph{"ha un"}) e ne riutilizza le funzionalità inoltrando le chiamate ad essa (\textbf{delega}), evitando di esporre la \textbf{rappresentazione} (gli attributi interni) della superclasse o violare \texttt{LSP} (Principio di Sostituzione di Liskov).
+
+\subsection{8. Astrazione di Iterazione e Classi Innestate / Nested Classes (PDJ 6)}\label{8-astrazione-di-iterazione-e-classi-innestate-nested-classes-pdj-6}
+
+\subsubsection{8.1 \texttt{Iterator<E>} vs \texttt{Iterable<E>}}\label{8-1-iterator-e-vs-iterable-e}
+
+\textbf{\texttt{Astrazione di Iterazione}}: Meccanismo che permette di accedere sequenzialmente e uniformemente a tutti gli elementi di una struttura dati o sorgente senza esporne la \textbf{rappresentazione interna} (gli attributi privati nello \texttt{Heap}, memoria dinamica globale).
+
+\textbf{\texttt{Iterator<E> (Generatore in PDJ) e Priming}}: Interfaccia implementata dall'oggetto che mantiene lo stato corrente della scansione e fornisce:
+
+\begin{quote}\small
+
+
+
+- \texttt{boolean hasNext()} (\textbf{osservatore}, non modifica lo stato): restituisce \texttt{true} se esistono altri elementi da visitare.
+
+- \texttt{E next()} (\textbf{mutatore}, avanza lo stato della scansione): restituisce l'elemento successivo e avanza lo stato; lancia \texttt{NoSuchElementException} (eccezione di elemento inesistente) se \texttt{!hasNext()}.
+
+- \texttt{default void remove()} (\textbf{mutatore} opzionale): rimuove l'ultimo elemento restituito da \texttt{next()} (spesso lancia \texttt{UnsupportedOperationException}, eccezione di operazione non supportata).
+
+- \textbf{Priming di un generatore:} Tecnica che consiste nel consumare uno o più elementi dall'\texttt{Iterator} (iteratore) \emph{prima} del ciclo \texttt{while (it.hasNext())} (ad esempio per inizializzare un accumulatore o trovare il massimo).
+
+\end{quote}
+
+\textbf{\texttt{Iterable<E>}}: Interfaccia implementata da una classe contenitore che espone il metodo \texttt{Iterator<E> iterator()} (chiamato \emph{Iteratore} in PDJ) per produrre nuove istanze indipendenti di \texttt{Iterator<E>} nello \texttt{Heap} (memoria dinamica globale) e abilitare il ciclo \textbf{\texttt{for-each}}.
+
+\begin{quote}\small
+
+
+
+- \textbf{Trappola d'esame — Perché non restituire direttamente \texttt{lista.iterator()}:} Perché l'iteratore standard delle \texttt{Collection} (collezioni) Java implementa \texttt{remove()}, permettendo al codice \textbf{client} (chi usa la classe) di rimuovere elementi dalla collezione interna nello \texttt{Heap} (memoria dinamica globale) e violando l'\textbf{incapsulamento} (\textbf{Representation Exposure}, esposizione della rappresentazione interna).
+
+\end{quote}
+
+\begin{itemize}
+
+\item \textbf{\texttt{Iteratore Standalone}}: La classe implementa direttamente \texttt{Iterator<E>} quando l'iterazione è la sua funzionalità principale o intrinsecamente sequenziale (es. \texttt{Range}, generatore di numeri primi, \texttt{Scanner}).
+
+
+
+\item \textbf{\texttt{Contenitore Iterable}}: La classe implementa \texttt{Iterable<E>} quando contiene dati su cui devono poter iterare più \textbf{client} (utilizzatori) in modo indipendente.
+
+\end{itemize}
+
+\subsubsection{8.2 Le Quattro Tipologie di Classi Innestate (Nested Classes)}\label{8-2-le-quattro-tipologie-di-classi-innestate-nested-classes}
+
+\textbf{\texttt{Nested Classes (Classi Innestate)}}: Classi definite all'interno di un'altra classe contenitore; poiché fanno parte del codice della classe contenitore, hanno accesso diretto a tutti i suoi attributi \texttt{private} (privati) senza violare l'\textbf{incapsulamento} (segretezza dello stato interno):
+
+\begin{quote}\small
+
+
+
+1. \textbf{\texttt{Static Nested Class (Classe annidata statica)}}: Dichiarata con \texttt{static}; non possiede alcun riferimento implicito all'istanza esterna (per accedervi deve riceverne un riferimento esplicito nel costruttore).
+
+2. \textbf{\texttt{Inner Class (Classe interna non statica)}}: Dichiarata senza \texttt{static}; ogni sua istanza nello \texttt{Heap} (memoria dinamica globale) è associata a una specifica istanza della classe esterna, accessibile tramite \texttt{ClasseEsterna.this}.
+
+3. \textbf{\texttt{Local Inner Class (Classe interna locale)}}: Classe dichiarata localmente all'interno di un blocco/metodo; visibile solo in quel blocco e restituita all'esterno tramite un supertipo/interfaccia (es. \texttt{Iterator<E>}).
+
+4. \textbf{\texttt{Anonymous Inner Class (Classe Anonima)}}: Classe locale priva di nome dichiarata e istanziata contestualmente in un'unica espressione (\texttt{new Interfaccia() \{ ... \}}). Può accedere alle variabili locali del metodo solo se \texttt{final} (non modificabili) o \textbf{effectively final} (mai riassegnate dopo la prima inizializzazione).
+
+\end{quote}
+
+\subsection{9. Polimorfismo e Generics in Java (PDJ 8 + Java Generics)}\label{9-polimorfismo-e-generics-in-java-pdj-8-java-generics}
+
+\subsubsection{9.1 Tassonomia del Polimorfismo}\label{9-1-tassonomia-del-polimorfismo}
+
+\textbf{\texttt{Polimorfismo}}: Capacità di associare a un unico simbolo (nome di metodo, variabile o tipo) dati di tipo diverso oppure comportamenti diversi in base al contesto.
+
+\begin{itemize}
+
+\item \textbf{\texttt{Polimorfismo Ad-hoc}}: Procedure con comportamenti diversi in base ai parametri (\texttt{Overloading}, sovraccaricamento) o al tipo su cui sono ridefinite (\texttt{Overriding}, ridefinizione).
+
+
+
+\item \textbf{\texttt{Polimorfismo di Sottotipo (Subtyping / Inclusion)}}: Capacità di assegnare istanze di sottotipi diversi a un \textbf{atomo} (variabile o parametro) avente come \textbf{tipo apparente} (tipo dichiarato a \textbf{compile-time}, in compilazione) un supertipo comune.
+
+
+
+\item \textbf{\texttt{Polimorfismo Parametrico}}: Capacità di una procedura o di un tipo di operare in modo uniforme su tipi diversi specificati come parametri di tipo (\texttt{<T>}).
+
+\end{itemize}
+
+\subsubsection{9.2 Generics, Relazioni di Sottotipo \texorpdfstring{($\prec$)}{(sottotipo)}, Wildcards e Type Erasure}\label{9-2-generics-relazioni-di-sottotipo-prec-wildcards-e-type-erasure}
+
+\textbf{\texttt{Generics e Operatore Diamond (<>)}}: Meccanismo di \textbf{polimorfismo parametrico} che parametrizza classi e metodi su uno o più tipi (\texttt{<T>}, \texttt{<E>}, \texttt{<K, V>}), garantendo la \texttt{type-safety} (sicurezza statica dei tipi) a \textbf{compile-time} (durante la compilazione) ed eliminando i \textbf{cast espliciti} (conversioni forzate di tipo) e i rischi di \texttt{ClassCastException} (errore di conversione di tipo a \textbf{runtime}, durante l'esecuzione) tipici del polimorfismo per subtyping su \texttt{Object}. L'operatore \textbf{Diamond (\texttt{<>})} abilita l'\textbf{inferenza automatica del tipo} in istanziazione (deduzione del tipo dal lato sinistro dell'assegnamento).
+
+\textbf{Proprietà della Relazione di Sottotipo ($\prec$) nei Generics, Wildcards e Array (Domanda Frequente al Quiz)}:
+
+\begin{quote}\small
+
+Sia $S \prec T$ (ad esempio \texttt{Integer} $\prec$ \texttt{Number}, oppure \texttt{Dog} $\prec$ \texttt{Animal}) e siano $G_1 \prec G_2$ due tipi generici (ad esempio \texttt{ArrayList} $\prec$ \texttt{List}):
+
+
+
+1. \textbf{\texttt{Covarianza del Tipo Base (Outer Type, il contenitore esterno)}}: A parità di parametro di tipo $V$, la gerarchia esterna si conserva:
+
+
+
+   \[
+
+   G_1 \prec G_2 \implies G_1\langle V \rangle \prec G_2\langle V \rangle
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{ArrayList<Integer>} $\prec$ \texttt{List<Integer>} $\prec$ \texttt{Collection<Integer>}).}
+
+
+
+2. \textbf{\texttt{Invarianza del Parametro di Tipo (Type Argument, il tipo tra parentesi angolari)}}: A parità di tipo contenitore $V$, la gerarchia interna \textbf{NON} si propaga:
+
+
+
+   \[
+
+   S \prec T \implies V\langle S \rangle \not\prec V\langle T \rangle \quad \text{e} \quad V\langle T \rangle \not\prec V\langle S \rangle
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{List<Integer>} \textbf{non} è sottotipo di \texttt{List<Number>} — errore di compilazione! Ciò impedisce di inserire un \texttt{Double} in una \texttt{List<Integer>} tramite un riferimento \texttt{List<Number>}).}
+
+
+
+3. \textbf{\texttt{Covarianza con Upper-Bounded Wildcard (? extends, carattere jolly con limite superiore)}}: Permette di \textbf{leggere} elementi come $T$ (vieta la scrittura, eccetto \texttt{null}):
+
+
+
+   \[
+
+   S \prec T \implies V\langle S \rangle \prec V\langle ? \text{ extends } T \rangle \quad \text{e} \quad V\langle ? \text{ extends } S \rangle \prec V\langle ? \text{ extends } T \rangle
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{List<Integer>} $\prec$ \texttt{List<? extends Number>}).}
+
+
+
+4. \textbf{\texttt{Controvarianza con Lower-Bounded Wildcard (? super, carattere jolly con limite inferiore)}}: Permette di \textbf{scrivere} elementi di tipo $S$ (lettura solo come \texttt{Object}):
+
+
+
+   \[
+
+   S \prec T \implies V\langle T \rangle \prec V\langle ? \text{ super } S \rangle \quad \text{e} \quad V\langle ? \text{ super } T \rangle \prec V\langle ? \text{ super } S \rangle
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{List<Number>} $\prec$ \texttt{List<? super Integer>}).}
+
+
+
+5. \textbf{\texttt{Unbounded Wildcard (<?>, carattere jolly senza vincoli)}}: È il supertipo di tutte le istanziazioni parametriche di $V$:
+
+
+
+   \[
+
+   \forall T: \quad V\langle T \rangle \prec V\langle ? \rangle, \quad V\langle ? \text{ extends } T \rangle \prec V\langle ? \rangle, \quad V\langle ? \text{ super } T \rangle \prec V\langle ? \rangle
+
+\]
+
+
+
+6. \textbf{\texttt{Raw Types (tipi grezzi senza parentesi angolari, per retrocompatibilità)}}: Ogni tipo parametrizzato è sottotipo del corrispondente \emph{raw type} non parametrizzato:
+
+
+
+   \[
+
+   \forall T: \quad V\langle T \rangle \prec V
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{ArrayList<String>} $\prec$ \texttt{ArrayList}).}
+
+
+
+7. \textbf{\texttt{Confronto con gli Array (Covarianza a Runtime)}}: A differenza dei \texttt{Generics} (invarianti), gli \textbf{array in Java sono covarianti} (seguono la gerarchia dei loro elementi):
+
+
+
+   \[
+
+   S \prec T \implies S[\,] \prec T[\,]
+
+\]
+
+
+
+   \emph{(Esempio: \texttt{Integer[]} $\prec$ \texttt{Number[]} compila, ma inserire un \texttt{Double} nello \texttt{Heap}, memoria dinamica globale, lancia \texttt{ArrayStoreException}, eccezione di salvataggio nell'array, a \textbf{runtime}, durante l'esecuzione).}
+
+
+
+8. \textbf{\texttt{Regola PECS (Producer Extends, Consumer Super)}}: Usa \texttt{<? extends T>} quando la struttura \emph{produce} valori da leggere; usa \texttt{<? super T>} quando \emph{consuma} valori da inserire.
+
+\end{quote}
+
+\textbf{\texttt{Type Erasure e Bridge Methods}}:
+
+\begin{quote}\small
+
+- \textbf{Type Erasure} (cancellazione dei tipi): Processo eseguito dal compilatore Java a \textbf{compile-time} (durante la compilazione) per garantire la retrocompatibilità del \texttt{Bytecode} (file \texttt{.class} intermedio): rimuove i parametri di tipo generici sostituendoli con il loro \textbf{upper bound} (limite superiore) o \texttt{Object}, e inserisce \textbf{cast} (conversioni di tipo) automatici in lettura.
+
+- \textbf{Bridge Methods} (metodi ponte): Metodi sintetici generati automaticamente dal compilatore durante la \textbf{Type Erasure} (cancellazione dei tipi) per preservare il corretto funzionamento dell'\textbf{overriding} (ridefinizione dei metodi) a \textbf{runtime} (durante l'esecuzione).
+
+\end{quote}
+
+\subsubsection{9.3 Ordinamento e Polimorfismo: \texttt{Comparable<T>} vs \texttt{Comparator<T>}}\label{9-3-ordinamento-e-polimorfismo-comparable-t-vs-comparator-t}
+
+\textbf{\texttt{Element Subtype Approach (Comparable<T>) vs Related Subtype Approach (Comparator<T>)}}:
+
+\begin{quote}\small
+
+- \textbf{\texttt{Comparable<T>}} (\textbf{Element Subtype Approach}, approccio del sottotipo dell'elemento, \texttt{java.lang}): La classe stessa dell'elemento implementa l'interfaccia definendo il proprio \textbf{ordinamento naturale} tramite \texttt{int compareTo(T o)} ($< 0$ se \texttt{this < o}, $0$ se equivalenti, $> 0$ se \texttt{this > o}). Richiede \textbf{pre-planning} (progettazione preventiva) nella definizione della classe.
+
+- \textbf{\texttt{Comparator<T>}} (\textbf{Related Subtype Approach}, approccio del sottotipo correlato, \texttt{java.util}): Oggetto ausiliario esterno che definisce un criterio di ordinamento alternativo tramite \texttt{int compare(T o1, T o2)}, utilizzabile anche su classi preesistenti non modificabili.
+
+\end{quote}
+
+\subsection{10. Programmazione Funzionale in Java}\label{10-programmazione-funzionale-in-java}
+
+\subsubsection{10.1 Fondamenti del Paradigma Funzionale}\label{10-1-fondamenti-del-paradigma-funzionale}
+
+\textbf{\texttt{Programmazione Dichiarativa vs Imperativa}}: La programmazione \textbf{imperativa} descrive \emph{come} eseguire il calcolo tramite sequenze di comandi che mutano lo stato in memoria; la programmazione \textbf{dichiarativa} (di cui quella \textbf{funzionale} è un'estensione) descrive \emph{cosa} calcolare mediante espressioni e composizione di funzioni matematiche.
+
+\textbf{\texttt{Trasparenza Referenziale}}: Proprietà di un'espressione di poter essere sostituita dal suo valore risultante in qualunque punto del programma senza alterarne il comportamento.
+
+\textbf{\texttt{Funzione Pura}}: Funzione \textbf{deterministica} (stesso input $\implies$ sempre stesso output) priva di \textbf{effetti collaterali} (\textbf{side effects}, ovvero clausola \texttt{MODIFIES} vuota) il cui risultato dipende esclusivamente dai parametri ricevuti in ingresso.
+
+\textbf{\texttt{Cittadini di Prima Classe e Funzioni di Ordine Superiore}}: In un linguaggio funzionale puro, le funzioni sono \textbf{cittadini di prima classe} (possono essere passate come parametri, restituite come valori e assegnate a variabili come un qualunque dato) e abilitano le \textbf{funzioni di ordine superiore} (funzioni che accettano altre funzioni come argomenti o restituiscono una funzione come risultato).
+
+\subsubsection{10.2 Interfacce Funzionali, Lambda, Composizione, Currying e Stream}\label{10-2-interfacce-funzionali-lambda-composizione-currying-e-stream}
+
+\textbf{\texttt{Interfaccia Funzionale (@FunctionalInterface)}}: Interfaccia Java che dichiara \textbf{un unico metodo astratto} (\textbf{SAM} — \emph{Single Abstract Method}, più eventuali metodi \texttt{default} o \texttt{static}), fungendo da tipo bersaglio per le \textbf{lambda expressions} (funzioni anonime compatte) (es. \texttt{Function<T,R>}, \texttt{Predicate<T>}, \texttt{Consumer<T>}, \texttt{Supplier<T>}, \texttt{Comparator<T>}).
+
+\textbf{\texttt{Lambda Expression}}: Costrutto sintattico compatto (\texttt{(parametri) -> espressione} oppure \texttt{(parametri) -> \{ blocco; \}}) per istanziare al volo un'\textbf{interfaccia funzionale} (\textbf{SAM}, interfaccia con un solo metodo astratto) senza scrivere una classe anonima estesa.
+
+\textbf{\texttt{Composizione di Funzioni (compose vs andThen)}}: Date due funzioni $f_1$ e $f_2$:
+
+\begin{quote}\small
+
+
+
+- \texttt{f1.compose(f2)} applica prima $f_2$ e poi $f_1$: $(f_1 \circ f_2)(x) = f_1(f_2(x))$.
+
+- \texttt{f1.andThen(f2)} applica prima $f_1$ e poi $f_2$: $(f_2 \circ f_1)(x) = f_2(f_1(x))$.
+
+\end{quote}
+
+\textbf{\texttt{Currying}}: Tecnica funzionale che trasforma una funzione a più argomenti in una sequenza concatenata di funzioni a un solo argomento ciascuna, dove ogni funzione restituisce la funzione successiva fino al risultato finale.
+
+\textbf{\texttt{Java Stream<T>}}: Astrazione di sequenza di elementi su cui eseguire pipeline dichiarative (non riutilizzabili dopo l'operazione terminale) formate da una \textbf{sorgente}, \textbf{operazioni intermedie lazy} (pigre, ossia valutate solo al momento dell'operazione terminale: \texttt{filter}, \texttt{map}, \texttt{distinct}, \texttt{sorted}) e un'\textbf{operazione terminale eager} (immediata, che avvia il calcolo e chiude lo stream: \texttt{count}, \texttt{forEach}, \texttt{anyMatch}, \texttt{allMatch}).
+
+\subsection{11. Ingegneria del Software e Design Pattern (PDJ 15)}\label{11-ingegneria-del-software-e-design-pattern-pdj-15}
+
+\subsubsection{11.1 Pattern Architetturali vs Design Pattern}\label{11-1-pattern-architetturali-vs-design-pattern}
+
+\textbf{\texttt{Pattern Architetturali}}: Metodologie per organizzare la macro-struttura di un sistema software separando i \textbf{moduli} (componenti) per responsabilità e minimizzando l'\textbf{accoppiamento} (le dipendenze reciproche), in particolare separando la \textbf{Business Logic} (logica di dominio, elaborazione e accesso ai dati) dalla \textbf{Presentation Logic} (interfaccia grafica/utente). Esempi: \texttt{MVC} (\emph{Model-View-Controller}, Modello-Vista-Controllore), \textbf{MVP} (\emph{Model-View-Presenter}), \textbf{MVVM} (\emph{Model-View-ViewModel}).
+
+\textbf{\texttt{Design Pattern (GoF)}}: Soluzioni progettuali standardizzate e riutilizzabili per risolvere problemi ricorrenti di interazione e strutturazione tra classi e oggetti (non sono algoritmi né librerie di codice pronto). Si classificano in tre categorie: \textbf{Creational} (creazionali), \textbf{Structural} (strutturali) e \textbf{Behavioral} (comportamentali).
+
+\subsubsection{11.2 I Pattern Trattati nel Corso}\label{11-2-i-pattern-trattati-nel-corso}
+
+\textbf{\texttt{Singleton (Creational Pattern, pattern creazionale)}}: Garantisce che di una classe esista \textbf{una sola istanza} nell'intero programma nello \texttt{Heap} (memoria dinamica globale) e fornisce un punto di accesso globale controllato ad essa, rendendo il costruttore \texttt{private} (non invocabile dall'esterno) ed esponendo un metodo \texttt{public static getInstance()} che inizializza e restituisce un attributo \texttt{private static} (unico a livello di classe).
+
+\textbf{\texttt{Decorator (Structural Pattern, pattern strutturale)}}: Consente di estendere o modificare dinamicamente i comportamenti di un singolo oggetto \textbf{già istanziato} a \textbf{runtime} (durante l'esecuzione), avvolgendolo per \textbf{composizione} (salvandolo come attributo privato) all'interno di classi decoratrici che implementano la stessa \textbf{interfaccia comune} e inoltrano le chiamate base per \textbf{delega} (inoltro dei metodi all'oggetto interno).
+
+\textbf{\texttt{Iterator (Behavioral Pattern, pattern comportamentale)}}: Fornisce un modo standardizzato per accedere sequenzialmente agli elementi di una collezione senza esporne la \textbf{rappresentazione sottostante} (gli attributi privati).
+
+\textbf{\texttt{Observer (Behavioral Pattern, pattern comportamentale)}}: Definisce una dipendenza \textbf{uno-a-molti} in cui un oggetto emettitore (\textbf{Creator / Subject}, il soggetto osservato) mantiene una lista di ascoltatori registrati tramite un'interfaccia comune (\texttt{Listener}, ascoltatore) e li notifica automaticamente invocando un metodo di \textbf{callback} (metodo richiamato automaticamente al verificarsi di un evento, es. \texttt{update()}) ogni volta che si verifica un evento o un cambio di stato.
+
+\subsection{12. Compendio Completo di Tutte le Definizioni, Formulario \texorpdfstring{$\prec$}{sottotipo} e Trappole d'Esame (L01–L16)}\label{12-compendio-completo-di-tutte-le-definizioni-formulario-prec-e-trappole-d-esame-l01-l16}
+
+\subsubsection{12.1 Formulario delle Proprietà della Relazione di Sottotipo \texorpdfstring{($\prec$)}{(sottotipo)}}\label{12-1-formulario-delle-proprieta-della-relazione-di-sottotipo-prec}
+
+Questa scheda riassume tutte le proprietà algebriche e di varianza associate al simbolo $\prec$ (relazione di sottotipo) richieste nei quiz teorici:
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}}
+
+\toprule
+
+Contesto & Proprietà / Formula con $\prec$ & Verità / Spiegazione \\
+
+\midrule
+
+\textbf{Proprietà Algebriche Base} & \textbf{\texttt{Transitivita}}: $A \prec B \land B \prec C \implies A \prec C$ & \textbf{VERA} (proprietà fondamentale delle gerarchie: il sottotipo di un sottotipo è sottotipo del supertipo). \\
+
+\textbf{Proprietà Algebriche Base} & \textbf{\texttt{Antisimmetria}}: $A \preceq B \land B \preceq A \implies A = B$ & \textbf{VERA} (nessun ciclo ammesso nelle gerarchie di tipi). \\
+
+\textbf{Proprietà Algebriche Base} & \textbf{\texttt{Simmetria}}: $A \prec B \implies B \prec A$ & \textbf{FALSA} (la relazione è asimmetrica/antisimmetrica: un supertipo non è sottotipo del suo sottotipo). \\
+
+\textbf{Gerarchia Java} & \textbf{\texttt{Radice Universale}}: $\forall T \text{ ref}: T \preceq \text{Object}$ & \textbf{VERA} (\texttt{Object}, la classe base universale, è il supertipo massimo di ogni tipo riferimento). \\
+
+\textbf{Gerarchia Java} & \textbf{\texttt{Topologia}}: Classi vs Tipi completi & Solo classi (\texttt{extends}): \textbf{Albero}. Classi + Interfacce: \textbf{DAG} (\textbf{Directed Acyclic Graph}, grafo orientato aciclico). \\
+
+\textbf{LSP (Segnature in Java)} & $T \prec S \implies R_T \preceq R_S$, $E_T \preceq E_S$, $P_T = P_S$ & Ritorno \textbf{covariante} (stessa direzione della gerarchia), eccezioni $\preceq$, parametri \textbf{invarianti} (identici) in Java. \\
+
+\textbf{Generics (Outer Type, contenitore esterno)} & $G_1 \prec G_2 \implies G_1\langle V \rangle \prec G_2\langle V \rangle$ & \textbf{VERA} (\textbf{covarianza} del contenitore esterno: es. \texttt{ArrayList<String>} $\prec$ \texttt{List<String>}). \\
+
+\textbf{Generics (Inner Type, tipo tra angolari)} & $S \prec T \implies V\langle S \rangle \prec V\langle T \rangle$ & \textbf{FALSA} ($V\langle S \rangle \not\prec V\langle T \rangle$: i \texttt{Generics}, tipi parametrici, sono \textbf{invarianti} sul parametro interno). \\
+
+\textbf{Wildcard \texttt{extends} (limite superiore)} & $S \prec T \implies V\langle S \rangle \prec V\langle ? \text{ extends } T \rangle$ & \textbf{VERA} (\textbf{covarianza}: consente solo lettura come $T$). \\
+
+\textbf{Wildcard \texttt{super} (limite inferiore)} & $S \prec T \implies V\langle T \rangle \prec V\langle ? \text{ super } S \rangle$ & \textbf{VERA} (\textbf{controvarianza}: consente scrittura di elementi di tipo $S$). \\
+
+\textbf{Unbounded \& Raw Types (tipi grezzi)} & $V\langle T \rangle \prec V\langle ? \rangle$ e $V\langle T \rangle \prec V$ & \textbf{VERA} (\texttt{<?>} e i \textbf{raw types}, tipi generici usati senza angolari, sono supertipi di ogni $V\langle T \rangle$). \\
+
+\textbf{Array Java} & $S \prec T \implies S[\,] \prec T[\,]$ & \textbf{VERA} (gli array sono \textbf{covarianti}, con rischio di \texttt{ArrayStoreException}, errore di salvataggio, a \textbf{runtime}, in esecuzione). \\
+
+\bottomrule
+
+\end{longtable}
+\endgroup
+
+\subsubsection{12.2 Tabella Riepilogativa di Tutte le Definizioni (L01–L16)}\label{12-2-tabella-riepilogativa-di-tutte-le-definizioni-l01-l16}
+
+\begingroup
+\footnotesize
+\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.54\linewidth}}
+
+\toprule
+
+Lezione & Termine / Concetto & Definizione Essenziale per il Quiz \\
+
+\midrule
+
+\textbf{L01} & \textbf{Imperativa vs Procedurale} & \textbf{Imperativa}: sequenza lineare di comandi che mutano la memoria. \textbf{Procedurale}: codice scomposto in procedure/funzioni riutilizzabili e \textbf{parametrizzate} (con parametri formali). \\
+
+\textbf{L01} & \textbf{Decomposizione} & Suddivisione di un problema in \textbf{moduli} (blocchi di codice) \textbf{logicamente coesi}, \textbf{indipendenti}, \textbf{allo stesso livello di dettaglio} e con \textbf{basso accoppiamento} (dipendenze minime). \\
+
+\textbf{L01} & \textbf{Astrazione} & \textbf{Mapping molti-a-uno} (più problemi concreti ricondotti a un'unica soluzione) che trascura il \emph{"come"} per concentrarsi sul \emph{"cosa"}. Garantisce \textbf{Località} (isolamento) e \textbf{Modificabilità} (sostituibilità interna). \\
+
+\textbf{L01} & \textbf{Parametrizzazione vs Specifica} & \textbf{Parametrizzazione}: astrae sui \textbf{dati} (parametri formali). \textbf{Specifica}: astrae sui \textbf{vincoli dell'operazione} (contratto esterno). \\
+
+\textbf{L02} & \textbf{Classe vs Oggetto} & \textbf{Classe}: stampino (\textbf{blueprint}, modello astratto). \textbf{Oggetto}: singola istanza concreta nello \texttt{Heap} (memoria dinamica globale). \\
+
+\textbf{L02} & \textbf{Encapsulation (Incapsulamento)} & Nascondere lo stato (\texttt{private}, privato) consentendo accesso/modifica solo tramite i metodi della classe. \\
+
+\textbf{L02} & \textbf{Bytecode, JVM, Type Safety} & \texttt{javac} $\to$ \texttt{.class} (\texttt{Bytecode}, codice intermedio) eseguito dalla \texttt{JVM} (Java Virtual Machine, macchina virtuale). \textbf{Type safety} (sicurezza dei tipi): tipi verificati staticamente a \textbf{compile-time} (in compilazione). \\
+
+\textbf{L02} & \textbf{Stack vs Heap \& Aliasing} & \textbf{Primitivi}: valore nello \texttt{Stack} (memoria locale veloce). \textbf{Riferimenti}: puntatore nello \texttt{Stack} (memoria locale), dati nello \texttt{Heap} (memoria dinamica globale degli oggetti). \textbf{Aliasing}: più riferimenti puntano allo stesso oggetto nello \texttt{Heap} (memoria dinamica globale). \\
+
+\textbf{L02} & \textbf{Passaggio Parametri} & Sempre \textbf{per valore}: copia il valore (primitivi) o il puntatore nello \texttt{Stack} (memoria locale) (riferimenti). \\
+
+\textbf{L02} & \textbf{Overloading \& Most Specific Call} & \texttt{Overloading} (sovraccaricamento): stesso nome, parametri diversi. Sceglie il metodo con \textbf{meno conversioni implicite} (\textbf{widening}, promozione di tipo); a parità dà errore di \textbf{ambiguità}. \\
+
+\textbf{L02} & \textbf{Boxing / Unboxing} & \textbf{Autoboxing}: primitivo $\to$ \texttt{Wrapper} (classe oggetto, es. \texttt{int} $\to$ \texttt{Integer}). \textbf{Unboxing}: \texttt{Wrapper} (classe oggetto) $\to$ primitivo. \\
+
+\textbf{L03} & \textbf{Clausole di Liskov} & \texttt{REQUIRES} (precondizioni, omessa se totale), \texttt{MODIFIES} (effetti collaterali: include \texttt{this}, \texttt{System.in}, \texttt{System.out}; omessa se puro), \texttt{EFFECTS} (postcondizioni, sempre presente), \texttt{OVERVIEW} (scopo e mutabilità della classe). \\
+
+\textbf{L03} & \textbf{Restrittività vs Minimalità} & \textbf{Restrittività}: esclude implementazioni errate. \textbf{Minimalità}: pone meno vincoli possibili sull'implementazione. \\
+
+\textbf{L03} & \textbf{Sottodeterminazione vs Determinismo} & \textbf{Sottodeterminazione} (proprietà della specifica): ammette più risultati validi. \textbf{Determinismo} (proprietà dell'implementazione): stesso input $\implies$ sempre stesso output. \\
+
+\textbf{L03} & \textbf{Procedura Totale vs Parziale} & \textbf{Totale}: definita su tutto il \textbf{dominio} (insieme dei valori ammessi dai tipi) (no \texttt{REQUIRES}). \textbf{Parziale}: definita solo dove vale \texttt{REQUIRES} (precondizioni) (altrove comportamento indefinito). \\
+
+\textbf{L04} & \textbf{Graceful Degradation \& Propagazione} & \textbf{Graceful Degradation} (degrado controllato): gestione degli errori senza crash né \textbf{errori di propagazione} (rischio di valori speciali \texttt{-1} o pattern \textbf{Comma-Ok}, valore + booleano, ignorati dal chiamante). \\
+
+\textbf{L04} & \textbf{Checked vs Unchecked Exceptions} & \textbf{Checked} (controllate): obbligo di \texttt{try-catch} o \texttt{throws}. \textbf{Unchecked} (non controllate): \texttt{Error} e \texttt{RuntimeException} (in Liskov vanno comunque messe in \texttt{throws} ed \texttt{EFFECTS}). \\
+
+\textbf{L04} & \textbf{Masking vs Reflection} & \textbf{Masking} (mascheramento): cattura e risolve localmente (\texttt{try-catch}). \texttt{Reflection} (riflessione): propaga al chiamante (\texttt{throws}). \\
+
+\textbf{L05–06} & \textbf{ADT, Rep, Adeguatezza} & \texttt{ADT} (Tipo di Dato Astratto): definito solo dalle operazioni. \textbf{Rep} (rappresentazione): attributi \texttt{private}. \textbf{Adeguatezza} (\textbf{Adequacy}): operazioni sufficienti ed efficienti. \\
+
+\textbf{L05–06} & \textbf{4 Categorie Metodi ADT} & \textbf{Creators} (costruttori, \textbf{copy constructor} costruttore di copia, \textbf{factory} creatori statici), \textbf{Observers} (osservatori), \textbf{Mutators} (mutatori, solo negli ADT mutabili), \textbf{Producers} (produttori, nuova istanza senza mutare operandi). \\
+
+\textbf{L05–06} & \textbf{Representation Exposure} & \textbf{Esposizione della rappresentazione}: riferimento a stato mutabile interno esposto all'esterno; si previene con \texttt{private} (privato) e \textbf{copie difensive} (\textbf{defensive copying}, duplicazione oggetti). \\
+
+\textbf{L05–06} & \textbf{\texttt{equals} / \texttt{similar} / \texttt{hashCode} / \texttt{clone}} & \texttt{equals} (riflessivo, simmetrico, transitivo, coerente); Liskov distingue \texttt{equals} (\texttt{==} sui mutabili) da \texttt{similar} (stato istantaneo); conservativo (\texttt{getClass()}) vs rilassato (\texttt{instanceof}); \texttt{a.equals(b)} $\implies$ \texttt{a.hashCode() == b.hashCode()}; \textbf{Shallow Copy} (copia superficiale dei soli puntatori nello \texttt{Stack}) vs \textbf{Deep Copy} (copia profonda degli oggetti nello \texttt{Heap}, memoria dinamica globale). \\
+
+\textbf{L07–08} & \textbf{Funzione di Astrazione ($AF$)} & $AF : C \to A$, \textbf{suriettiva} (copre tutti i valori astratti — \textbf{Fully Populates}, popolamento completo) e \textbf{molti-a-uno} (\textbf{non-iniettiva}). Implementata da \textbf{\texttt{toString()}}. \\
+
+\textbf{L07–08} & \textbf{Invariante di Rappresentazione ($RI$)} & \textbf{Predicato} (funzione booleana \texttt{true}/\texttt{false}) $RI : C \to \{\text{True}, \text{False}\}$ che definisce il dominio di $AF$ (Funzione di Astrazione). Implementata da \textbf{\texttt{repOk()}} + \textbf{\texttt{assert repOk();}} (\texttt{java -ea}, abilita asserzioni a \textbf{runtime}, in esecuzione). \\
+
+\textbf{L07–08} & \textbf{Induzione ADT, AI, Benevolent Side Effects} & \textbf{Induzione}: base costruttori, passo mutatori/produttori. \textbf{AI} (Invariante di Astrazione): invariante di specifica. \textbf{Benevolent Side Effects} (effetti collaterali benevoli): mutazioni interne nello \texttt{Heap} invisibili ad $AF$ in \texttt{ADT} (Tipi di Dato Astratti) astrattamente immutabili. \\
+
+\textbf{L09–10} & \textbf{Tipo Apparente vs Concreto \& Dispatch} & \textbf{Tipo Apparente} (\textbf{compile-time}, in compilazione): metodi invocabili. \textbf{Tipo Concreto} (\textbf{runtime}, in esecuzione): \textbf{override} (ridefinizione) eseguito (\textbf{Dynamic Dispatch}, dispatching dinamico). Attenzione a metodi overridden chiamati in \texttt{super(...)}. \\
+
+\textbf{L09–10} & \textbf{Principio di Sostituzione di Liskov (LSP)} & Regola delle \textbf{Segnature} (parametri \textbf{invarianti}, ritorno \textbf{covariante}, eccezioni $\le$), \textbf{Metodi} (precondizioni indebolite, postcondizioni rinforzate), \textbf{Proprietà} (\texttt{super.repOk()} e proprietà evolutive). \\
+
+\textbf{L09–10} & \textbf{3 Tipi di Supertipi \& Classi/Interfacce} & Supertipi \textbf{Completi}, \textbf{Incompleti}, \textbf{Snippet} (interfacce minimali). \texttt{abstract class} (classe astratta: stato, ereditarietà singola) vs \texttt{interface} (interfaccia: no stato, ereditarietà multipla). \\
+
+\textbf{L09–10} & \textbf{Composizione e Delega} & \textbf{Composizione} (attributo interno) e \textbf{Delega} (inoltro chiamate): preferibile a \texttt{extends} se la relazione \emph{IS-A} ontologica viola \texttt{LSP} (Principio di Sostituzione di Liskov, es. \texttt{Quadrato} vs \texttt{Rettangolo}). \\
+
+\textbf{L11–12} & \textbf{\texttt{Iterator<E>}, \texttt{Iterable<E>}, Priming} & \texttt{Iterator} (Generatore): stato scansione (\texttt{hasNext}, \texttt{next}, \texttt{remove}). \texttt{Iterable}: produce iteratori (\texttt{iterator()}). \textbf{Priming}: leggere prima del \texttt{while}. Non esporre \texttt{Collection.iterator()} perché ha \texttt{remove()} (viola l'\textbf{incapsulamento}). \\
+
+\textbf{L11–12} & \textbf{4 Nested Classes (Classi Innestate)} & \textbf{Static Nested} (statica, no \texttt{Outer.this}), \textbf{Inner} (non statica, legata a \texttt{Outer.this}), \textbf{Local Inner} (locale nel metodo), \textbf{Anonymous Class} (anonima senza nome; variabili locali \texttt{final} o \textbf{effectively final}, mai riassegnate). \\
+
+\textbf{L13–14} & \textbf{3 Tipi di Polimorfismo \& Subtype Approaches} & \textbf{Ad-hoc} (overload/override), \textbf{Subtyping} (sottotipi), \textbf{Parametrico} (Generics). \textbf{Element Subtype} (\texttt{Comparable<T>}, nella classe stessa) vs \textbf{Related Subtype} (\texttt{Comparator<T>}, oggetto esterno). \\
+
+\textbf{L13–14} & \textbf{Generics, Varianza, PECS, Type Erasure} & \texttt{Generics} (tipi parametrici) \textbf{invarianti} (\texttt{List<Integer>} $\not\prec$ \texttt{List<Number>}) vs \textbf{Array} \textbf{covarianti} (\texttt{ArrayStoreException} a \textbf{runtime}, in esecuzione). \textbf{PECS} (\emph{Producer Extends, Consumer Super}): \texttt{<? extends T>} legge, \texttt{<? super T>} scrive. \textbf{Type Erasure} (cancellazione tipi a \textbf{compile-time}) + \textbf{Bridge Methods} (metodi ponte). \\
+
+\textbf{L15} & \textbf{Programmazione Funzionale} & \textbf{Trasparenza referenziale} (sostituibilità col valore), \textbf{Funzione pura} (no \texttt{MODIFIES}, nessun effetto collaterale), \textbf{SAM} (\emph{Single Abstract Method}, un solo metodo astratto), \textbf{Lambda} (funzione anonima compatta), \textbf{\texttt{compose}} vs \textbf{\texttt{andThen}}, \textbf{Currying} (catena di funzioni unarie), \textbf{\texttt{Stream<T>}} (operazioni intermedie \textbf{lazy}, pigre + operazione terminale \textbf{eager}, immediata). \\
+
+\textbf{L16} & \textbf{Design Pattern} & \textbf{Architetturali} (MVC, MVP, MVVM) vs \textbf{GoF}: \texttt{Singleton} (\textbf{Creational}, istanza unica globale), \texttt{Decorator} (\textbf{Structural}, estensione dinamica a \textbf{runtime}), \texttt{Iterator} e \texttt{Observer} (\textbf{Behavioral}, notifica tramite \textbf{callback}). \\
+
+\bottomrule
+
+\end{longtable}
+\endgroup
+
+\subsection{13. Appendice: Checklist Operativa per l'Esame (Teoria e Laboratorio)}\label{13-appendice-checklist-operativa-per-l-esame-teoria-e-laboratorio}
+
+\begin{itemize}
+
+\item \textbf{Specifiche in ogni classe e metodo}:
+
+\item Scrivi sempre \texttt{// OVERVIEW:} (panoramica della classe) su ogni classe dichiarando se è \textbf{mutabile} o \textbf{immutabile}.
+
+
+
+\item Su ogni metodo (tranne semplici \textbf{getter}, osservatori diretti di un attributo, e metodi standard di \texttt{Object} come \texttt{equals}, \texttt{hashCode}, \texttt{toString}, \texttt{clone}) scrivi \texttt{REQUIRES} (precondizioni, solo se procedura parziale), \texttt{MODIFIES} (effetti collaterali, solo se modifica qualcosa, inclusi \texttt{this}, \texttt{System.in}, \texttt{System.out}) ed \texttt{EFFECTS} (postcondizioni, sempre).
+
+
+
+\item \textbf{Totalità tramite Eccezioni}:
+
+\item Valida sempre i parametri nei costruttori e nei metodi pubblici. Se lanci un'eccezione per un input non valido, documentala in \texttt{EFFECTS} (postcondizioni), dichiarala in \texttt{throws} (intestazione delle eccezioni lanciate) secondo lo stile Liskov e \textbf{non} metterla in \texttt{REQUIRES} (precondizioni).
+
+
+
+\item \textbf{Protezione della Rappresentazione (Encapsulation / Incapsulamento)}:
+
+\item Tutti gli attributi devono essere \texttt{private} (privati, accessibili solo nella classe) e \texttt{final} (non riassegnabili) se l'attributo è immutabile.
+
+
+
+\item Esegui \textbf{copie difensive} (\textbf{defensive copying}, duplicazione di array e collezioni mutabili nello \texttt{Heap}, memoria dinamica globale) sia in ingresso (costruttori/mutatori) sia in uscita (osservatori) e dentro \texttt{clone()} per evitare \textbf{Representation Exposure} (esposizione della rappresentazione interna).
+
+
+
+\item \textbf{Invariante di Rappresentazione ($RI$) e Funzione di Astrazione ($AF$)}:
+
+\item Implementa \texttt{public boolean repOk()} (chiamando \texttt{super.repOk()}, l'invariante della superclasse, nelle sottoclassi!) e invocalo con \texttt{assert repOk();} (asserzione verificata a \textbf{runtime} con \texttt{java -ea}) alla fine di ogni costruttore e metodo \textbf{mutatore} (che altera lo stato).
+
+
+
+\item Implementa \texttt{toString()} come \textbf{Funzione di Astrazione} ($AF$, mappatura dallo stato concreto nello \texttt{Heap} all'entità astratta) descrivendo l'entità astratta in modo chiaro e completo.
+
+
+
+\item \textbf{Gerarchie e Principio di Sostituzione di Liskov (LSP)}:
+
+\item Verifica che ogni sottoclasse rispetti le tre regole di \texttt{LSP} (Principio di Sostituzione di Liskov: \textbf{Segnature}, \textbf{Metodi}, \textbf{Proprietà}). Se estendere una classe viola \texttt{LSP} (come \texttt{Quadrato} vs \texttt{Rettangolo}), usa \textbf{Composizione} (attributo privato interno) e \textbf{Delega} (inoltro delle chiamate).
+
+
+
+\item Ricorda che nel costruttore di una sottoclasse \texttt{super(...)} (chiamata al costruttore della superclasse) deve essere la \textbf{prima istruzione}.
+
+
+
+\item \textbf{Iteratori e Generics}:
+
+\item Preferisci \texttt{Iterable<E>} (contenitore iterabile) + classe interna o anonima (\textbf{Nested Class}) per \texttt{Iterator<E>} (iteratore) evitando di esporre \texttt{remove()} di una collezione interna per non rompere l'\textbf{invariante di rappresentazione} ($RI$) della classe.
+
+
+
+\item Ricorda che i \texttt{Generics} (tipi parametrici) sono \textbf{invarianti} (\texttt{List<Integer>} $\not\prec$ \texttt{List<Number>}): applica la regola \textbf{PECS} (\emph{Producer Extends, Consumer Super}) usando \texttt{<? extends T>} (wildcard con limite superiore) per leggere e \texttt{<? super T>} (wildcard con limite inferiore) per scrivere.
+
+\end{itemize}

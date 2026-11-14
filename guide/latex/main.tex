@@ -1,0 +1,68 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+\setmainfont{Latin Modern Roman}
+\geometry{a4paper,margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,frame=single,columns=fullflexible}
+\setlist{nosep,leftmargin=*}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\titleformat{\section}{\Large\bfseries\color{blue!60!black}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{blue!45!black}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{black}}{\thesubsubsection}{0.7em}{}
+\titlespacing*{\section}{0pt}{2.0em plus 0.4em minus 0.2em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.4em plus 0.3em minus 0.2em}{0.5em}
+\titlespacing*{\subsubsection}{0pt}{1.0em plus 0.2em minus 0.1em}{0.3em}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Programmazione 2 — Java 21}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{15pt}
+\setcounter{tocdepth}{2}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{3pt}
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\setlength{\emergencystretch}{5em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt plus 1pt minus 1pt}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\brokenpenalty=5000
+\hfuzz=50pt
+\hbadness=10000
+\tolerance=1500
+\pretolerance=500
+\raggedbottom
+
+\begin{document}
+
+\title{Programmazione 2 Java 21\\Guida teorica\\per l'esame UNIMI}
+\author{Loris Dal Santo}
+\date{Novembre 2026}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\input{teoria-trascrizione.tex}
+
+\end{document}
