@@ -104,6 +104,18 @@ Una buona decomposizione produce **moduli** (blocchi autonomi di codice) caratte
 
 ### 2.2 I Pilastri della OOP e i Package
 
+I quattro principi fondamentali della programmazione orientata agli oggetti sono:
+
+1. **`Astrazione`**: rappresentare solo gli aspetti essenziali di un problema, nascondendo i dettagli non necessari. In Java si realizza tramite classi, interfacce, ADT e specifiche: chi usa un tipo deve conoscere **cosa** offre, non **come** è implementato.
+
+2. **`Incapsulamento (Encapsulation)`**: racchiudere stato e operazioni in un oggetto e proteggere lo stato interno dall'accesso diretto. In Java si usano principalmente attributi `private`, metodi pubblici controllati, invarianti di rappresentazione (`RI`) e copie difensive.
+
+3. **`Ereditarietà (Inheritance)`**: definire un nuovo tipo a partire da un tipo esistente, ereditandone membri e comportamento e specializzandolo. In Java si usa `extends` per le classi e `implements` per le interfacce. Deve rappresentare una relazione **IS-A** e rispettare il principio di sostituzione di Liskov (`LSP`); altrimenti è preferibile la composizione.
+
+4. **`Polimorfismo (Polymorphism)`**: permettere di usare oggetti di tipi concreti diversi attraverso un tipo comune. Con il **subtyping** il metodo invocato può essere scelto a `runtime` tramite **dynamic dispatch**; con i **generics** si ottiene polimorfismo parametrico; con l'overloading si ottiene polimorfismo ad-hoc.
+
+I pilastri non sono indipendenti: l'astrazione definisce il contratto, l'incapsulamento protegge la rappresentazione, l'ereditarietà organizza i tipi e il polimorfismo permette di sostituire implementazioni diverse dietro lo stesso contratto.
+
 **`Incapsulamento (Encapsulation)`**: Principio secondo cui lo stato interno di un oggetto viene nascosto all'esterno (`private`, accessibile solo dentro la classe stessa), imponendo che ogni ispezione o modifica avvenga esclusivamente attraverso i metodi pubblici dell'oggetto stesso, garantendo così la coerenza dello stato.
 
 **`Package`**: Costrutto organizzativo gerarchico di Java (corrispondente alle cartelle del file system) che raggruppa classi correlate, delimita la visibilità a livello di modulo ed evita conflitti di nomi identificando univocamente ogni classe tramite il suo `Fully Qualified Name` (nome completo comprensivo di tutti i package, es. `java.util.ArrayList`). Il package `java.lang` è importato automaticamente.

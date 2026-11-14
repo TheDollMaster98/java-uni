@@ -104,6 +104,20 @@ Una buona decomposizione produce \textbf{moduli} (blocchi autonomi di codice) ca
 
 \subsubsection{2.2 I Pilastri della OOP e i Package}\label{2-2-i-pilastri-della-oop-e-i-package}
 
+I quattro principi fondamentali della programmazione orientata agli oggetti sono:
+
+\begin{enumerate}
+\item \textbf{\texttt{Astrazione}}: rappresentare solo gli aspetti essenziali di un problema, nascondendo i dettagli non necessari. In Java si realizza tramite classi, interfacce, ADT e specifiche: chi usa un tipo deve conoscere \textbf{cosa} offre, non \textbf{come} è implementato.
+
+\item \textbf{\texttt{Incapsulamento (Encapsulation)}}: racchiudere stato e operazioni in un oggetto e proteggere lo stato interno dall'accesso diretto. In Java si usano principalmente attributi \texttt{private}, metodi pubblici controllati, invarianti di rappresentazione (\texttt{RI}) e copie difensive.
+
+\item \textbf{\texttt{Ereditarietà (Inheritance)}}: definire un nuovo tipo a partire da un tipo esistente, ereditandone membri e comportamento e specializzandolo. In Java si usa \texttt{extends} per le classi e \texttt{implements} per le interfacce. Deve rappresentare una relazione \emph{IS-A} e rispettare il principio di sostituzione di Liskov (\texttt{LSP}); altrimenti è preferibile la composizione.
+
+\item \textbf{\texttt{Polimorfismo (Polymorphism)}}: permettere di usare oggetti di tipi concreti diversi attraverso un tipo comune. Con il \textbf{subtyping} il metodo invocato può essere scelto a \textbf{runtime} tramite \textbf{dynamic dispatch}; con i \textbf{generics} si ottiene polimorfismo parametrico; con l'overloading si ottiene polimorfismo ad-hoc.
+\end{enumerate}
+
+I pilastri non sono indipendenti: l'astrazione definisce il contratto, l'incapsulamento protegge la rappresentazione, l'ereditarietà organizza i tipi e il polimorfismo permette di sostituire implementazioni diverse dietro lo stesso contratto.
+
 \textbf{\texttt{Incapsulamento (Encapsulation)}}: Principio secondo cui lo stato interno di un oggetto viene nascosto all'esterno (\texttt{private}, accessibile solo dentro la classe stessa), imponendo che ogni ispezione o modifica avvenga esclusivamente attraverso i metodi pubblici dell'oggetto stesso, garantendo così la coerenza dello stato.
 
 \textbf{\texttt{Package}}: Costrutto organizzativo gerarchico di Java (corrispondente alle cartelle del file system) che raggruppa classi correlate, delimita la visibilità a livello di modulo ed evita conflitti di nomi identificando univocamente ogni classe tramite il suo \texttt{Fully Qualified Name} (nome completo comprensivo di tutti i package, es. \texttt{java.util.ArrayList}). Il package \texttt{java.lang} è importato automaticamente.
